@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TunLuxAuto - Premium Cars</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">TunLuxAuto</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#collection">Collection</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <h1>Searching For a Luxurious Car?</h1>
+        <p>Premium vehicles curated for discerning buyers</p>
+        <div class="search-box">
+            <select id="make" onchange="updateModels()">
+                <option value="">Any Make</option>
+                <option value="bmw">BMW</option>
+                <option value="porsche">Porsche</option>
+                <option value="audi">Audi</option>
+                <option value="ford">Ford</option>
+            </select>
+            <select id="model">
+                <option value="">Any Model</option>
+            </select>
+            <button onclick="startSearch()" class="search-btn">Search</button>
+        </div>
+    </section>
+    <section class="featured">
+        <h2>Featured Cars</h2>
+        <div class="featured-grid">
+            <div class="car-card">
+                <img src="car_images/R8.jpg" alt="Audi R8">
+                <h3>Audi R8</h3>
+                <p>480,000 DT</p>
+            </div>
+            <div class="car-card">
+                <img src="car_images/911.webp" alt="Porsche 911">
+                <h3>Porsche 911</h3>
+                <p>450,000 DT</p>
+            </div>
+            <div class="car-card">
+                <img src="car_images/RS7.webp" alt="Audi RS7">
+                <h3>Audi RS7</h3>
+                <p>360,000 DT</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="collection" class="collection">
+        <h2>Our Collection</h2>
+        <div class="filters">
+            <button class="filter-tab active" onclick="filterCars('all')">All</button>
+            <button class="filter-tab" onclick="filterCars('supercars')">Supercars</button>
+            <button class="filter-tab" onclick="filterCars('luxury')">Luxury</button>
+            <button class="filter-tab" onclick="filterCars('exotic')">Exotic</button>
+        </div>
+
+        <div id="carsGrid" class="cars-grid"></div>
+    </section>
+    <section class="stats">
+        <div class="stat-item">
+            <div class="stat-number" data-target="150">0</div>
+            <div class="stat-label">Cars Sold</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="12">0</div>
+            <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="98">0</div>
+            <div class="stat-label">% Satisfaction</div>
+        </div>
+    </section>
+    <section id="contact" class="contact">
+        <h2>Get In Touch</h2>
+        <p>Ready to buy? Contact our team today.</p>
+        <button onclick="openChat()" class="contact-btn">Contact Us</button>
+    </section>
+    <!-- <button id="backToTop" onclick="scrollToTop()" class="back-to-top">↑</button> -->
+    <script src="script.js"></script>
+</body>
+
+</html>

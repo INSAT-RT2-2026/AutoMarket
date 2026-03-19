@@ -105,7 +105,10 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('car_images/ferrari.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .hero h1 {
@@ -333,7 +336,6 @@ body {
     opacity: 1;
 }
 
-/* Car details page */
 .details-page {
     padding: 6rem 5% 4rem;
     background: #0a0a0a;

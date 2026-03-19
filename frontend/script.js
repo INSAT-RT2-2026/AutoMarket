@@ -121,14 +121,11 @@ const allCars = [
         "description": "A premium compact SUV with dynamic driving, modern tech, and everyday comfort."
     }
 ];
-
 document.addEventListener('DOMContentLoaded', () => {
     initHomePage();
     initCarDetailsPage();
 });
-
 function initHomePage() {
-    // Only run homepage rendering if the elements exist on this page.
     if (document.getElementById('carsGrid')) {
         displayCars(allCars);
     }
@@ -136,11 +133,9 @@ function initHomePage() {
         populateCarSelect(allCars);
     }
 }
-
 function initCarDetailsPage() {
     const detailsContainer = document.getElementById('carDetails');
     if (!detailsContainer) return;
-
     const params = new URLSearchParams(window.location.search);
     const id = Number(params.get('id'));
     const car = allCars.find(c => c.id === id);
@@ -170,7 +165,6 @@ function displayCars(cars) {
 function filterCars(category) {
     document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
-
     let filtered = [];
     if (category === 'all') {
         filtered = allCars;
@@ -201,7 +195,6 @@ function inquire(carId) {
     if (contact) {
         contact.scrollIntoView({ behavior: 'smooth' });
     } else {
-        // Details page doesn't have the contact section, so go back to the homepage.
         window.location.href = 'indx.html#contact';
     }
 }
@@ -244,7 +237,6 @@ function renderCarDetails(car, container) {
         `;
         return;
     }
-
     container.innerHTML = `
         <div class="details-card">
             <img class="details-image" src="${car.image}" alt="${car.brand} ${car.model}">
@@ -259,7 +251,6 @@ function renderCarDetails(car, container) {
         </div>
     `;
 }
-
 /*const form = document.getElementById('contact-form');
 if (form) {
     form.addEventListener('submit', e => {

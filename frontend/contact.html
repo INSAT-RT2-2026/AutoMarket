@@ -22,8 +22,16 @@
         <div class="contact-form-card">
             <div id="formSection">
                 <div class="form-field">
+                    <div id = "selectedCar" style = "display : none ;" class = "selected-car-box">
+                        <p id = "selectedCarText"></p>
+                    </div>
+                    <input type = "hidden" id = "carInterest">                    
                     <label for="fullName">Full Name</label>
                     <input type="text" id="fullName" placeholder="John Doe">
+                </div>
+                <div class="form-field">
+                    <label for="message">Message</label>
+                    <textarea id="message" placeholder="Any questions or notes..." rows="3"></textarea>
                 </div>
                 <div class="form-field">
                     <label for="phone">Phone Number</label>

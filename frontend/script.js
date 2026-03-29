@@ -187,17 +187,6 @@ function populateCarSelect(cars) {
         select.appendChild(option);
     });
 }
-function inquire(carId) {
-    const car = allCars.find(c => c.id === carId);
-    const select = document.getElementById('car-interest');
-    if (car && select) select.value = `${car.brand} ${car.model}`;
-    const contact = document.getElementById('contact');
-    if (contact) {
-        contact.scrollIntoView({ behavior: 'smooth' });
-    } else {
-        window.location.href = 'indx.html#contact';
-    }
-}
 function updateModels() {
     const make = document.getElementById('make').value;
     const model = document.getElementById('model');
@@ -289,4 +278,7 @@ if (statsSection) {
         });
     }, { threshold: 0.3 });
     observer.observe(statsSection);
+}
+function inquire(carId) {
+    window.location.href = `contact.html?car=${encodeURIComponent(carId)}`;
 }

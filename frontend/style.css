@@ -426,3 +426,15 @@ body {
 .back-link:hover {
     color: #d4af37;
 }
+.nav-login-btn {
+    background: #d4af37;
+    color: black !important;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: transform 0.3s;
+}
+
+.nav-login-btn:hover {
+    transform: scale(1.05);
+}

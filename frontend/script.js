@@ -122,6 +122,7 @@ const allCars = [
     }
 ];
 document.addEventListener('DOMContentLoaded', () => {
+    updateNavbar();
     initHomePage();
     initCarDetailsPage();
 });
@@ -141,11 +142,9 @@ function initCarDetailsPage() {
     const car = allCars.find(c => c.id === id);
     renderCarDetails(car, detailsContainer);
 }
-
 function openCarDetails(carId) {
     window.location.href = `car-details.html?id=${encodeURIComponent(carId)}`;
 }
-
 function displayCars(cars) {
     const container = document.getElementById('carsGrid');
     if (!container) return;
@@ -216,7 +215,6 @@ function startSearch() {
     displayCars(filtered);
     document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
 }
-
 function renderCarDetails(car, container) {
     if (!car) {
         container.innerHTML = `
@@ -281,4 +279,23 @@ if (statsSection) {
 }
 function inquire(carId) {
     window.location.href = `contact.html?car=${encodeURIComponent(carId)}`;
+}
+function updateNavbar() {
+    const user = localStorage.getItem('user');
+    const navAuthBtn = document.getElementById('navAuthBtn');
+    if (!navAuthBtn) return;
+
+    if (user) {
+        const parsed = JSON.parse(user);
+        navAuthBtn.textContent = parsed.fullName;
+        navAuthBtn.href = '#';
+        navAuthBtn.onclick = function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.reload();
+        };
+    } else {
+        navAuthBtn.textContent = 'Login';
+        navAuthBtn.href = 'login.html';
+    }
 }

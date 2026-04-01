@@ -226,14 +226,33 @@ function renderCarDetails(car, container) {
     }
     container.innerHTML = `
         <div class="details-card">
-            <img class="details-image" src="${car.image}" alt="${car.brand} ${car.model}">
-            <h2>${car.brand} ${car.model} ${car.year}</h2>
-            <p class="details-price">${car.price.toLocaleString()} DT</p>
-            <p class="details-specs">${car.specs}</p>
-            <p class="details-description">${car.description || ''}</p>
-            <div class="details-actions">
-                <button class="buy-btn" onclick="inquire(${car.id})">Buy Now</button>
-                <a class="back-link" href="indx.html#collection">Back to collection</a>
+            <div class="details-image-wrapper">
+                <img class="details-image" src="${car.image}" alt="${car.brand} ${car.model}">
+                <span class="details-type-badge">${car.type.toUpperCase()}</span>
+            </div>
+            <div class="details-body">
+                <div class="details-header">
+                    <div>
+                        <h2>${car.brand} ${car.model}</h2>
+                        <span class="details-year">${car.year}</span>
+                    </div>
+                    <p class="details-price">${car.price.toLocaleString()} DT</p>
+                </div>
+                <div class="details-specs-grid">
+                    ${car.specs.split('•').map(spec => `
+                        <div class="spec-item">
+                            <span>${spec.trim()}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="details-description-box">
+                    <h4>About this car</h4>
+                    <p>${car.description || ''}</p>
+                </div>
+                <div class="details-actions">
+                    <button class="buy-btn" onclick="inquire(${car.id})">Buy Now</button>
+                    <a class="back-link" href="indx.html#collection">← Back to collection</a>
+                </div>
             </div>
         </div>
     `;

@@ -318,3 +318,7 @@ function updateNavbar() {
         navAuthBtn.href = 'login.html';
     }
 }
+fetch("../backend/contact.php", {
+    method: "POST",
+    body: JSON.stringify({ name, phone, email })
+})

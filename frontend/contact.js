@@ -19,8 +19,8 @@ function submitForm() {
         alert("Please enter a valid phone number");
         return;
     }
-
-    fetch("../backend/contact.php", {
+    
+   fetch("../backend/contact.php", {
         method: "POST",
         headers: { 
             "Content-Type": "application/json" 
@@ -33,11 +33,16 @@ function submitForm() {
             message: document.getElementById("message").value.trim() || "No message"
         })
     })
+    
     .then(res => res.json())
     .then(data => {
         console.log(data);
-        document.getElementById("formSection").style.display = "none";
-        document.getElementById("thankYou").style.display = "block";
+        if (data.status === "success") {
+            document.getElementById("formSection").style.display = "none";
+            document.getElementById("thankYou").style.display = "block";
+        } else {
+            alert("Server error");
+        }
     })
     .catch(error => {
         alert("Something went wrong");

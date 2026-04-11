@@ -5,7 +5,7 @@ function login() {
         alert("Please fill all fields");
         return;
     }
-    fetch("backend/auth.php", {
+    fetch("../backend/auth.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -17,7 +17,9 @@ function login() {
     .then(res => res.json())
     .then(data => {
         if (data.status === "success") {
+            // Save user name in localStorage
             localStorage.setItem("user", data.name);
+            // Redirect to homepage
             window.location.href = "indx.html";
         } else {
             alert("Invalid email or password");
@@ -29,19 +31,19 @@ function login() {
     });
 }
 function register() {
-    const name = document.getElementById("fullname").value.trim();
+    const name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
     const confirmPassword = document.getElementById("confirmPassword").value.trim();
     if (!name || !email || !password || !confirmPassword) {
         alert("Please fill all fields");
         return;
-    }s
+    }
     if (password !== confirmPassword) {
         alert("Passwords do not match");
         return;
     }
-    fetch("backend/auth.php", {
+    fetch("../backend/auth.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+
+  php:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/var/www/html/frontend
+      - ./backend:/var/www/html/backend
+    environment:
+      DB_HOST: db
+      DB_NAME: tunluxauto
+      DB_USER: tunluxuser
+      DB_PASSWORD: tunluxpass
+      DB_PORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: tunluxauto
+      POSTGRES_USER: tunluxuser
+      POSTGRES_PASSWORD: tunluxpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tunluxuser -d tunluxauto"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:

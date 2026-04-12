@@ -11,7 +11,7 @@ $email   = $data->email;
 $car     = $data->car_interest ?? "Not specified";
 $message = $data->message ?? "No message";
 
-$stmt = $pdo->prepare("INSERT INTO contacts_cwds (name, phone, email, car, message) VALUES (?, ?, ?, ?, ?)");
+$stmt = $pdo->prepare("INSERT INTO contacts (name, phone, email, car, message) VALUES (?, ?, ?, ?, ?)");
 $stmt->execute([$name, $phone, $email, $car, $message]);
 
 echo json_encode(["status" => "success"]);

@@ -224,6 +224,7 @@ function renderCarDetails(car, container) {
         `;
         return;
     }
+    document.title = `${car.brand} ${car.model} — TunLuxAuto`;
     container.innerHTML = `
         <div class="details-card">
             <div class="details-image-wrapper">

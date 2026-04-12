@@ -20,7 +20,7 @@ function login() {
             // Save user name in localStorage
             localStorage.setItem("user", data.name);
             // Redirect to homepage
-            window.location.href = "indx.html";
+            window.location.href = "index.html";
         } else {
             alert("Invalid email or password");
         }

@@ -43,7 +43,7 @@ function register() {
         alert("Passwords do not match");
         return;
     }
-    fetch("../backend/auth.php", {
+    fetch("/backend/auth.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

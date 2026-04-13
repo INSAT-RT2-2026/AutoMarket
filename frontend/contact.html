@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="contact.css">
     <link rel="icon" href="favicon.ico">
 </head>
+
 <body>
     <nav class="navbar">
         <a href="index.html" class="logo">TunLuxAuto</a>
@@ -15,8 +16,18 @@
             <a href="index.html#home">Home</a>
             <a href="index.html#collection">Collection</a>
             <a href="index.html#contact" style="color:#d4af37;">Contact</a>
+            <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+            <div id="navUserMenu">
+                <span id="navUserName" class="nav-login-btn">Me</span>
+                <div id="navDropdown">
+                    <div id="navDropdownHello">Hello, User!</div>
+                    <a href="#" onclick="logout()">➜] Logout</a>
+                </div>
+            </div>
+
         </div>
     </nav>
+
     <div class="contact-page">
         <h2>Get In Touch</h2>
         <p class="subtitle">Our team will reach out within 24 hours.</p>
@@ -54,6 +65,7 @@
             </div>
         </div>
     </div>
-    <script src="./contact.js"></script>
+
+    <script src="contact.js"></script>
 </body>
 </html>

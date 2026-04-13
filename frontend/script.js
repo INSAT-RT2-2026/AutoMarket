@@ -121,11 +121,13 @@ const allCars = [
         "description": "A premium compact SUV with dynamic driving, modern tech, and everyday comfort."
     }
 ];
+
 document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
     initHomePage();
     initCarDetailsPage();
 });
+
 function initHomePage() {
     if (document.getElementById('carsGrid')) {
         displayCars(allCars);
@@ -134,6 +136,7 @@ function initHomePage() {
         populateCarSelect(allCars);
     }
 }
+
 function initCarDetailsPage() {
     const detailsContainer = document.getElementById('carDetails');
     if (!detailsContainer) return;
@@ -142,9 +145,11 @@ function initCarDetailsPage() {
     const car = allCars.find(c => c.id === id);
     renderCarDetails(car, detailsContainer);
 }
+
 function openCarDetails(carId) {
     window.location.href = `car-details.html?id=${encodeURIComponent(carId)}`;
 }
+
 function displayCars(cars) {
     const container = document.getElementById('carsGrid');
     if (!container) return;
@@ -161,6 +166,7 @@ function displayCars(cars) {
         </div>
     `).join('');
 }
+
 function filterCars(category) {
     document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
@@ -176,6 +182,7 @@ function filterCars(category) {
     }
     displayCars(filtered);
 }
+
 function populateCarSelect(cars) {
     const select = document.getElementById('car-interest');
     if (!select) return;
@@ -186,6 +193,7 @@ function populateCarSelect(cars) {
         select.appendChild(option);
     });
 }
+
 function updateModels() {
     const make = document.getElementById('make').value;
     const model = document.getElementById('model');
@@ -206,6 +214,7 @@ function updateModels() {
         });
     }
 }
+
 function startSearch() {
     const make = document.getElementById('make').value.toLowerCase();
     const model = document.getElementById('model').value.toLowerCase();
@@ -215,6 +224,7 @@ function startSearch() {
     displayCars(filtered);
     document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
 }
+
 function renderCarDetails(car, container) {
     if (!car) {
         container.innerHTML = `
@@ -258,14 +268,7 @@ function renderCarDetails(car, container) {
         </div>
     `;
 }
-/*const form = document.getElementById('contact-form');
-if (form) {
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        alert('Thank you! We will contact you soon about your inquiry.');
-        e.target.reset();
-    });
-}*/
+
 function animateCounters() {
     const counters = document.querySelectorAll('.stat-number');
     counters.forEach(counter => {
@@ -285,6 +288,7 @@ function animateCounters() {
         update();
     });
 }
+
 const statsSection = document.querySelector('.stats');
 if (statsSection) {
     const observer = new IntersectionObserver((entries) => {
@@ -297,28 +301,45 @@ if (statsSection) {
     }, { threshold: 0.3 });
     observer.observe(statsSection);
 }
+
 function inquire(carId) {
     window.location.href = `contact.html?car=${encodeURIComponent(carId)}`;
 }
+
 function updateNavbar() {
     const user = localStorage.getItem('user');
     const navAuthBtn = document.getElementById('navAuthBtn');
+
+    const navUserMenu = document.getElementById('navUserMenu');
+    const navUserName = document.getElementById('navUserName');
+
     if (!navAuthBtn) return;
 
     if (user) {
         const parsed = JSON.parse(user);
-        navAuthBtn.textContent = parsed.fullName;
-        navAuthBtn.href = '#';
-        navAuthBtn.onclick = function() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.reload();
-        };
+        if (navAuthBtn) navAuthBtn.style.display = 'none';
+        if (navUserMenu) navUserMenu.style.display = 'block';
+        if (navUserName) {
+            navUserName.textContent = parsed.name.charAt(0).toUpperCase();
+            const helloEl = document.getElementById('navDropdownHello');
+            if (helloEl) helloEl.textContent = 'Hello ' + parsed.name + '!';
+            navUserName.onclick = function() {
+                const dropdown = document.getElementById('navDropdown');
+                const isVisible = dropdown.style.display === 'block';
+                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            };
+        }
     } else {
-        navAuthBtn.textContent = 'Login';
-        navAuthBtn.href = 'login.html';
+        if (navAuthBtn) navAuthBtn.style.display = 'block';
+        if (navUserMenu) navUserMenu.style.display = 'none';
     }
 }
+
+function logout() {
+    localStorage.removeItem('user');
+    window.location.reload();
+}
+
 fetch("../backend/contact.php", {
     method: "POST",
     body: JSON.stringify({ name, phone, email })

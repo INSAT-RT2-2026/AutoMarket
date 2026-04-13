@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico">
 </head>
+
 <body>
     <nav class="navbar">
         <a href="index.html" class="logo">TunLuxAuto</a>
@@ -15,11 +16,21 @@
             <a href="#collection">Collection</a>
             <a href="contact.html">Contact</a>
             <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+
+            <div id="navUserMenu">
+                <span id="navUserName" class="nav-login-btn">Me</span>
+                <div id="navDropdown">
+                    <div id="navDropdownHello">Hello, User!</div>
+                    <a href="#" onclick="logout()">➜] Logout</a>
+                </div>
+            </div>
         </div>
     </nav>
+
     <section id="home" class="hero">
         <h1>Searching For a Luxurious Car?</h1>
         <p>Premium vehicles curated for discerning buyers</p>
+
         <div class="search-box">
             <select id="make" onchange="updateModels()">
                 <option value="">Any Make</option>
@@ -34,6 +45,7 @@
             <button onclick="startSearch()" class="search-btn">Search</button>
         </div>
     </section>
+
     <section class="featured">
         <h2>Featured Cars</h2>
         <div class="featured-grid">
@@ -43,12 +55,14 @@
                 <p>480,000 DT</p>
                 <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(6)">View Description</button>
             </div>
+
             <div class="car-card" onclick="openCarDetails(1)">
                 <img src="car_images/911.webp" alt="Porsche 911">
                 <h3>Porsche 911</h3>
                 <p>450,000 DT</p>
                 <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(1)">View Description</button>
             </div>
+
             <div class="car-card" onclick="openCarDetails(8)">
                 <img src="car_images/RS7.webp" alt="Audi RS7">
                 <h3>Audi RS7</h3>
@@ -69,6 +83,7 @@
 
         <div id="carsGrid" class="cars-grid"></div>
     </section>
+
     <section class="stats">
         <div class="stat-item">
             <div class="stat-number" data-target="150">0</div>
@@ -83,11 +98,13 @@
             <div class="stat-label">% Satisfaction</div>
         </div>
     </section>
+
     <section id="contact" class="contact">
         <h2>Get In Touch</h2>
         <p>Ready to buy? Contact our team today.</p>
         <button onclick="window.location.href='contact.html'" class="contact-btn">Contact Us</button>
     </section>
+
     <script src="script.js"></script>
 </body>
 </html>

@@ -81,6 +81,46 @@ body {
     border-bottom: 1px solid rgba(212, 175, 55, 0.15);
 }
 
+#navUserMenu {
+    position: relative;
+    display: none;
+}
+
+#navDropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: #1a1a2e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    min-width: 160px;
+    padding: 0.5rem 0;
+    z-index: 200;
+}
+
+#navDropdownHello {
+    padding: 10px 20px;
+    color: #d4af37;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #333;
+    margin-bottom: 4px;
+    font: serif;
+}
+
+#navDropdown a {
+    display: block;
+    padding: 10px 20px;
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+#navDropdown a:hover {
+    color: #d4af37;
+}
+
 .logo {
     font-size: 1.4rem;
     font-weight: 900;

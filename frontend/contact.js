@@ -49,3 +49,42 @@ function submitForm() {
         console.log(error);
     });
 }
+
+function updateNavbar() {
+    console.log('updateNavbar called', localStorage.getItem('user'));
+    const user = localStorage.getItem('user');
+    const navAuthBtn = document.getElementById('navAuthBtn');
+
+    const navUserMenu = document.getElementById('navUserMenu');
+    const navUserName = document.getElementById('navUserName');
+
+    if (!navAuthBtn) return;
+
+    if (user) {
+        const parsed = JSON.parse(user);
+        if (navAuthBtn) navAuthBtn.style.display = 'none';
+        if (navUserMenu) navUserMenu.style.display = 'block';
+        if (navUserName) {
+            navUserName.textContent = parsed.name.charAt(0).toUpperCase();
+            const helloEl = document.getElementById('navDropdownHello');
+            if (helloEl) helloEl.textContent = 'Hello ' + parsed.name + '!';
+            navUserName.onclick = function() {
+                const dropdown = document.getElementById('navDropdown');
+                const isVisible = dropdown.style.display === 'block';
+                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            };
+        }
+    } else {
+        if (navAuthBtn) navAuthBtn.style.display = 'block';
+        if (navUserMenu) navUserMenu.style.display = 'none';
+    }
+}
+
+function logout() {
+    localStorage.removeItem('user');
+    window.location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateNavbar();
+});

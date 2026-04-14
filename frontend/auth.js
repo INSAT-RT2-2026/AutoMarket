@@ -25,8 +25,9 @@ function login() {
                 email: data.email,
                 phone: data.phone
             }));
-            // Redirect to homepage
-            window.location.href = "index.html";
+            const redirect = sessionStorage.getItem('redirectAfterLogin');
+            sessionStorage.removeItem('redirectAfterLogin');
+            window.location.href = redirect || 'index.html';
         } else {
             alert("Invalid email or password");
         }
@@ -84,7 +85,9 @@ function register() {
                 email: data.email,
                 phone: data.phone
             }));
-            window.location.href = "index.html";
+            const redirect = sessionStorage.getItem('redirectAfterLogin');
+            sessionStorage.removeItem('redirectAfterLogin');
+            window.location.href = redirect || 'index.html';
         } else {
             alert(data.message || "Something went wrong");
         }

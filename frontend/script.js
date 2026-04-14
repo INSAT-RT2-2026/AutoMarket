@@ -303,6 +303,11 @@ if (statsSection) {
 }
 
 function inquire(carId) {
+    if (!localStorage.getItem('user')) {
+        sessionStorage.setItem('redirectAfterLogin', `contact.html?car=${encodeURIComponent(carId)}`);
+        window.location.href = 'register.html';
+        return;
+    }
     window.location.href = `contact.html?car=${encodeURIComponent(carId)}`;
 }
 
@@ -339,8 +344,3 @@ function logout() {
     localStorage.removeItem('user');
     window.location.reload();
 }
-
-fetch("../backend/contact.php", {
-    method: "POST",
-    body: JSON.stringify({ name, phone, email })
-})

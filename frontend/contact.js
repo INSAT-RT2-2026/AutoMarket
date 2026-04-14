@@ -80,6 +80,17 @@ function updateNavbar() {
     }
 }
 
+function prefillFromUser() {
+    const raw = localStorage.getItem('user');
+    if (!raw) return;
+    try {
+        const user = JSON.parse(raw);
+        if (user.name) document.getElementById('fullName').value = user.name;
+        if (user.email) document.getElementById('email').value = user.email;
+        if (user.phone) document.getElementById('phone').value = user.phone;
+    } catch (e) {}
+}
+
 function logout() {
     localStorage.removeItem('user');
     window.location.reload();
@@ -87,4 +98,5 @@ function logout() {
 
 document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
+    prefillFromUser();
 });

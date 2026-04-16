@@ -347,7 +347,7 @@ body {
     border-radius: 12px;
     overflow: hidden;
     transition: 0.3s ease;
-    padding: 0; /* important */
+    padding: 0; 
 }
 
 .car-card img {
@@ -719,6 +719,4 @@ body {
     margin-top: 15px;
     text-align: center;
     color: #00f0ff;
-}.sell-page {
-    padding-top: 120px; /* 👈 IMPORTANT */
 }

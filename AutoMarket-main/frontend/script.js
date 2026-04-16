@@ -204,7 +204,7 @@ function updateModels() {
     const model = document.getElementById('model');
     model.innerHTML = '<option value="">Any Model</option>';
     const models = {
-        bmw: ["M3", "Série 3", "X4", "IX"],
+        bmw: ["M3", "X4", "IX"],
         porsche: ["911", "TAYCAN", "Taycan Cross Turismo"],
         mercedes: ["911", "Cayenne", "Panamera"],
         audi: ["RS7", "R8", "E-tron GT"],

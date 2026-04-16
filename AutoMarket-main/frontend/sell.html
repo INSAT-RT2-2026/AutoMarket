@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Car</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+    <a href="indx.html" class="logo">TunLuxAuto</a>
+
+    <div class="nav-links">
+        <a href="indx.html#home">Home</a>
+        <a href="indx.html#collection">Collection</a>
+        <a href="sell.html" class="active">Sell Your Car</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+    </div>
+    </nav>
+
+    <section class="sell-page">
+
+        <div class="sell-container">
+            <h2>Sell Your Car</h2>
+            <p class="subtitle">List your vehicle and reach premium buyers</p>
+
+            <form id="sellForm" enctype="multipart/form-data">
+
+                <div class="form-grid">
+                    <input type="text" name="brand" placeholder="Brand" required>
+                    <input type="text" name="model" placeholder="Model" required>
+                    <input type="number" name="year" placeholder="Year" required>
+                    <input type="number" name="price" placeholder="Price (DT)" required>
+                    <input type="number" name="horsepower" placeholder="Horsepower" required>
+                </div>
+
+                <textarea name="description" placeholder="Describe your car..." required></textarea>
+
+                <div class="form-grid">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="text" name="phone" placeholder="Phone Number" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+
+                <div class="file-upload">
+                    <label>Upload Car Images</label>
+                    <input type="file" name="images[]" multiple accept="image/*" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Car</button>
+
+                <p id="responseMsg"></p>
+            </form>
+        </div>
+
+    </section>
+
+</body>
+</html>

@@ -1,74 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TunLuxAuto - Premium Cars</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="favicon.ico">
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="index.html" class="logo">TunLuxAuto</a>
+        <div class="logo">TunLuxAuto</div>
         <div class="nav-links">
-            <a href="#home" style="color:#d4af37;">Home</a>
+            <a href="#home">Home</a>
             <a href="#collection">Collection</a>
-            <a href="contact.html">Contact</a>
-            <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
-
-            <div id="navUserMenu">
-                <span id="navUserName" class="nav-login-btn">Me</span>
-                <div id="navDropdown">
-                    <div id="navDropdownHello">Hello, User!</div>
-                    <a href="#" onclick="logout()">➜] Logout</a>
-                </div>
-            </div>
+            <a href="#contact">Contact</a>
         </div>
     </nav>
 
     <section id="home" class="hero">
         <h1>Searching For a Luxurious Car?</h1>
         <p>Premium vehicles curated for discerning buyers</p>
-
         <div class="search-box">
-
-            <!-- Make Dropdown -->
-            <div class="custom-select-wrapper" id="makeWrapper">
-                <button class="custom-select-trigger" id="makeTrigger" onclick="toggleDropdown('make')">
-                    <span id="makeLabel">Any Make</span>
-                    <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                </button>
-                <ul class="custom-select-list" id="makeList">
-                    <li class="custom-option selected" data-value="" onclick="selectMake(this)">Any Make</li>
-                    <li class="custom-option" data-value="bmw" onclick="selectMake(this)">BMW</li>
-                    <li class="custom-option" data-value="porsche" onclick="selectMake(this)">Porsche</li>
-                    <li class="custom-option" data-value="audi" onclick="selectMake(this)">Audi</li>
-                    <li class="custom-option" data-value="ford" onclick="selectMake(this)">Ford</li>
-                </ul>
-                <input type="hidden" id="make" value="">
-            </div>
-
-            <!-- Model Dropdown -->
-            <div class="custom-select-wrapper" id="modelWrapper">
-                <button class="custom-select-trigger" id="modelTrigger" onclick="toggleDropdown('model')">
-                    <span id="modelLabel">Any Model</span>
-                    <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                </button>
-                <ul class="custom-select-list" id="modelList">
-                    <li class="custom-option selected" data-value="" onclick="selectModel(this)">Any Model</li>
-                </ul>
-                <input type="hidden" id="model" value="">
-            </div>
-
+            <select id="make" onchange="updateModels()">
+                <option value="">Any Make</option>
+                <option value="bmw">BMW</option>
+                <option value="porsche">Porsche</option>
+                <option value="audi">Audi</option>
+                <option value="ford">Ford</option>
+            </select>
+            <select id="model">
+                <option value="">Any Model</option>
+            </select>
             <button onclick="startSearch()" class="search-btn">Search</button>
         </div>
     </section>
-
     <section class="featured">
         <h2>Featured Cars</h2>
         <div class="featured-grid">
@@ -78,14 +44,12 @@
                 <p>480,000 DT</p>
                 <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(6)">View Description</button>
             </div>
-
             <div class="car-card" onclick="openCarDetails(1)">
                 <img src="car_images/911.webp" alt="Porsche 911">
                 <h3>Porsche 911</h3>
                 <p>450,000 DT</p>
                 <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(1)">View Description</button>
             </div>
-
             <div class="car-card" onclick="openCarDetails(8)">
                 <img src="car_images/RS7.webp" alt="Audi RS7">
                 <h3>Audi RS7</h3>
@@ -106,7 +70,6 @@
 
         <div id="carsGrid" class="cars-grid"></div>
     </section>
-
     <section class="stats">
         <div class="stat-item">
             <div class="stat-number" data-target="150">0</div>
@@ -121,13 +84,13 @@
             <div class="stat-label">% Satisfaction</div>
         </div>
     </section>
-
     <section id="contact" class="contact">
         <h2>Get In Touch</h2>
         <p>Ready to buy? Contact our team today.</p>
-        <button onclick="window.location.href='contact.html'" class="contact-btn">Contact Us</button>
+        <button onclick="openChat()" class="contact-btn">Contact Us</button>
     </section>
-
+    <!-- <button id="backToTop" onclick="scrollToTop()" class="back-to-top">↑</button> -->
     <script src="script.js"></script>
 </body>
+
 </html>

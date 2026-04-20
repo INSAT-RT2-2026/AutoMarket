@@ -194,36 +194,82 @@ function populateCarSelect(cars) {
     });
 }
 
-function updateModels() {
-    const make = document.getElementById('make').value;
-    const model = document.getElementById('model');
-    model.innerHTML = '<option value="">Any Model</option>';
-    const models = {
-        bmw: ["M3", "Série 3", "X4", "IX"],
-        porsche: ["911", "TAYCAN", "Taycan Cross Turismo"],
-        mercedes: ["911", "Cayenne", "Panamera"],
-        audi: ["RS7", "R8", "E-tron GT"],
-        ford: ["Mustang", "RAPTOR"]
-    };
-    if (models[make]) {
-        models[make].forEach(m => {
-            const opt = document.createElement('option');
-            opt.value = m;
-            opt.textContent = m;
-            model.appendChild(opt);
+/* ── Custom Dropdown Logic ── */
+const modelsMap = {
+    bmw:     ["M3", "X4", "iX"],
+    porsche: ["911", "Taycan", "Taycan Cross Turismo"],
+    audi:    ["R8", "RS7", "E-tron GT"],
+    ford:    ["Mustang", "Raptor"]
+};
+
+function toggleDropdown(which) {
+    const wrapper = document.getElementById(which + 'Wrapper');
+    const isOpen  = wrapper.classList.contains('open');
+    // close all first
+    document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+    if (!isOpen) wrapper.classList.add('open');
+}
+
+function selectMake(el) {
+    const value = el.dataset.value;
+    const label = el.textContent;
+    // update hidden input + label
+    document.getElementById('make').value = value;
+    document.getElementById('makeLabel').textContent = label;
+    // highlight selected option
+    document.querySelectorAll('#makeList .custom-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    // close
+    document.getElementById('makeWrapper').classList.remove('open');
+    // rebuild model list
+    updateModels(value);
+}
+
+function selectModel(el) {
+    const value = el.dataset.value;
+    const label = el.textContent;
+    document.getElementById('model').value = value;
+    document.getElementById('modelLabel').textContent = label;
+    document.querySelectorAll('#modelList .custom-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('modelWrapper').classList.remove('open');
+}
+
+function updateModels(make) {
+    make = make || document.getElementById('make').value;
+    const list = document.getElementById('modelList');
+    // reset
+    list.innerHTML = '<li class="custom-option selected" data-value="" onclick="selectModel(this)">Any Model</li>';
+    document.getElementById('model').value = '';
+    document.getElementById('modelLabel').textContent = 'Any Model';
+    if (modelsMap[make]) {
+        modelsMap[make].forEach(m => {
+            const li = document.createElement('li');
+            li.className = 'custom-option';
+            li.dataset.value = m;
+            li.textContent = m;
+            li.onclick = function() { selectModel(this); };
+            list.appendChild(li);
         });
     }
 }
 
 function startSearch() {
-    const make = document.getElementById('make').value.toLowerCase();
+    const make  = document.getElementById('make').value.toLowerCase();
     const model = document.getElementById('model').value.toLowerCase();
     let filtered = allCars;
-    if (make) filtered = filtered.filter(c => c.brand.toLowerCase() === make);
+    if (make)  filtered = filtered.filter(c => c.brand.toLowerCase() === make);
     if (model) filtered = filtered.filter(c => c.model.toLowerCase() === model);
     displayCars(filtered);
     document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
 }
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.custom-select-wrapper')) {
+        document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+    }
+});
 
 function renderCarDetails(car, container) {
     if (!car) {

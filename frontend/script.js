@@ -126,6 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
     initHomePage();
     initCarDetailsPage();
+
+    document.addEventListener('click', (event) => {
+        const navUserMenu = document.getElementById('navUserMenu');
+        const navDropdown = document.getElementById('navDropdown');
+        if (!navUserMenu || !navDropdown) return;
+        if (!navUserMenu.contains(event.target)) {
+            navDropdown.style.display = 'none';
+        }
+    });
 });
 
 function initHomePage() {

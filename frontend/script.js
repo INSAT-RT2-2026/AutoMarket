@@ -138,6 +138,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initHomePage() {
+    if (document.querySelector('.stats')) {
+        const experienceStat = document.querySelector('.stat-item:nth-child(2) .stat-number');
+        if (experienceStat) {
+            const startYear = 2012;
+            const currentYear = new Date().getFullYear();
+            experienceStat.setAttribute('data-target', currentYear - startYear);
+        }
+    }
     if (document.getElementById('carsGrid')) {
         displayCars(allCars);
     }

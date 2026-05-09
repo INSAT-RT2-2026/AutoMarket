@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeImmutable;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'contacts')]
@@ -27,6 +28,14 @@ class Contact
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $message = null;
+
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $submittedAt;
+
+    public function __construct()
+    {
+        $this->submittedAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -86,5 +95,10 @@ class Contact
     {
         $this->message = $message;
         return $this;
+    }
+
+    public function getSubmittedAt(): DateTimeImmutable
+    {
+        return $this->submittedAt;
     }
 }

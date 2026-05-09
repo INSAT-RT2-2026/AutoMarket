@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeImmutable;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users')]
@@ -27,6 +28,14 @@ class User
 
     #[ORM\Column(type: 'string', length: 20)]
     private string $role = 'user';
+
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -86,5 +95,10 @@ class User
     {
         $this->role = $role;
         return $this;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
     }
 }

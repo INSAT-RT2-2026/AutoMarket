@@ -10,3 +10,4 @@ symfony/vendor/
 symfony/.env.local
 symfony/var/
 symfony/.env.local.php
+!symfony/.env

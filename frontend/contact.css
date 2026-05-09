@@ -73,6 +73,7 @@
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 1.2rem;
     animation: glow 2s infinite;
+}
 .thank-you-box .check-circle svg { width: 24px; height: 24px; stroke: #d4af37; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 .thank-you-box h3 { color: #d4af37; font-size: 1.5rem; margin-bottom: 0.6rem; }
 .thank-you-box p { color: #888; font-size: 0.9rem; line-height: 1.7; }

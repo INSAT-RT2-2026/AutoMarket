@@ -178,7 +178,7 @@ function displayCars(cars) {
                 <p>${car.specs}</p>
                 <p class="price">${car.price.toLocaleString()} DT</p>
                 <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(${car.id})">View Description</button>
-                <button class="buy-btn" onclick="event.stopPropagation(); inquire(${car.id})">Buy Now</button>
+                <button class="buy-btn" onclick="event.stopPropagation(); inquire('${car.brand} ${car.model}')">Buy Now</button>
             </div>
         </div>
     `).join('');
@@ -324,7 +324,7 @@ function renderCarDetails(car, container) {
                     <p>${car.description || ''}</p>
                 </div>
                 <div class="details-actions">
-                    <button class="buy-btn" onclick="inquire(${car.id})">Buy Now</button>
+                    <button class="buy-btn" onclick="inquire('${car.brand} ${car.model}')">Buy Now</button>
                     <a class="back-link" href="index.html#collection">← Back to collection</a>
                 </div>
             </div>
@@ -365,13 +365,13 @@ if (statsSection) {
     observer.observe(statsSection);
 }
 
-function inquire(carId) {
+function inquire(carName) {
     if (!localStorage.getItem('user')) {
-        sessionStorage.setItem('redirectAfterLogin', `contact.html?car=${encodeURIComponent(carId)}`);
+        sessionStorage.setItem('redirectAfterLogin', `contact.html?car=${encodeURIComponent(carName)}`);
         window.location.href = 'register.html';
         return;
     }
-    window.location.href = `contact.html?car=${encodeURIComponent(carId)}`;
+    window.location.href = `contact.html?car=${encodeURIComponent(carName)}`;
 }
 
 function updateNavbar() {

@@ -20,7 +20,7 @@ function submitForm() {
         return;
     }
     
-   fetch("../backend/contact.php", {
+   fetch("/backend/contact.php", {
         method: "POST",
         headers: { 
             "Content-Type": "application/json" 
@@ -96,12 +96,22 @@ function logout() {
     window.location.reload();
 }
 
+function prefillCarFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const carName = params.get('car');
+    if (!carName) return;
+    document.getElementById('carInterest').value = carName;
+    document.getElementById('selectedCarText').textContent = 'Interested in: ' + carName;
+    document.getElementById('selectedCar').style.display = 'block';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('user')) {
-        sessionStorage.setItem('redirectAfterLogin', `contact.html`);
+        sessionStorage.setItem('redirectAfterLogin', window.location.href);
         window.location.href = 'register.html';
         return;
     }
     prefillFromUser();
     updateNavbar();
+    prefillCarFromUrl();
 });

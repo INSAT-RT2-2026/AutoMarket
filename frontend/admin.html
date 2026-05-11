@@ -414,16 +414,16 @@
             }
             tbody.innerHTML = users.map(u => `
                 <tr>
-                    <td>#${u.id}</td>
+                    <td>#${u.user_id}</td>
                     <td>${esc(u.name)}</td>
                     <td>${esc(u.email)}</td>
                     <td>${esc(u.phone)}</td>
                     <td><span class="role-badge role-${u.role}">${u.role}</span></td>
                     <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</td>
                     <td>
-                        <button class="action-btn btn-role" onclick="openRoleModal(${u.id}, '${u.role}')">Role</button>
-                        <button class="action-btn btn-password" onclick="openPasswordModal(${u.id})">Password</button>
-                        ${u.role !== 'admin' ? `<button class="action-btn btn-delete" onclick="deleteUser(${u.id})">Delete</button>` : ''}
+                        <button class="action-btn btn-role" onclick="openRoleModal(${u.user_id}, '${u.role}')">Role</button>
+                        <button class="action-btn btn-password" onclick="openPasswordModal(${u.user_id})">Password</button>
+                        ${u.role !== 'admin' ? `<button class="action-btn btn-delete" onclick="deleteUser(${u.user_id})">Delete</button>` : ''}
                     </td>
                 </tr>
             `).join('');

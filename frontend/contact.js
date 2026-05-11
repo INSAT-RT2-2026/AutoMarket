@@ -1,42 +1,19 @@
 function submitForm() {
-    const name = document.getElementById("fullName").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const email = document.getElementById("email").value.trim();
+    const user = JSON.parse(localStorage.getItem('user'));
+    const message = document.getElementById("message").value.trim() || null;
+    const car_name = document.getElementById("carInterest").value || null;
 
-    if (name === "" || phone === "" || email === "") {
-        alert("Please fill all fields");
-        return;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-        alert("Please enter a valid email");
-        return;
-    }
-
-    const phonePattern = /^[0-9]{8}$/;
-    if (!phonePattern.test(phone)) {
-        alert("Please enter a valid phone number");
-        return;
-    }
-    
-   fetch("/backend/contact.php", {
+    fetch("/backend/contact.php", {
         method: "POST",
-        headers: { 
-            "Content-Type": "application/json" 
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            name: name,
-            phone: phone,
-            email: email,
-            car_interest: document.getElementById("carInterest").value || "Not specified",
-            message: document.getElementById("message").value.trim() || "No message"
+            user_id:  user.id,
+            car_name: car_name,
+            message:  message
         })
     })
-    
     .then(res => res.json())
     .then(data => {
-        console.log(data);
         if (data.status === "success") {
             document.getElementById("formSection").style.display = "none";
             document.getElementById("thankYou").style.display = "block";

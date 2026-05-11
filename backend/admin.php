@@ -30,7 +30,7 @@ if (!$admin || $admin['role'] !== 'admin') {
 
 // ── get_users ─────────────────────────────────────────────────────────────────
 if ($action === "get_users") {
-    $stmt  = $pdo->query("SELECT id, name, email, phone, role, created_at FROM users ORDER BY created_at DESC");
+    $stmt  = $pdo->query("SELECT user_id, name, email, phone, role, created_at FROM users ORDER BY created_at DESC");
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode(["status" => "success", "users" => $users]);
     exit;
@@ -47,7 +47,7 @@ if ($action === "set_password") {
     }
 
     $hashed = password_hash($new_password, PASSWORD_DEFAULT);
-    $stmt   = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmt   = $pdo->prepare("UPDATE users SET password = ? WHERE user_id = ?");
     $stmt->execute([$hashed, $user_id]);
 
     echo json_encode(["status" => "success", "message" => "Password updated successfully"]);
@@ -64,7 +64,7 @@ if ($action === "set_role") {
         exit;
     }
 
-    $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE user_id = ?");
     $stmt->execute([$new_role, $user_id]);
 
     echo json_encode(["status" => "success", "message" => "Role updated"]);
@@ -81,7 +81,7 @@ if ($action === "delete_user") {
     }
 
     // Prevent deleting other admins for safety
-    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ? AND role != 'admin'");
+    $stmt = $pdo->prepare("DELETE FROM users WHERE user_id = ? AND role != 'admin'");
     $stmt->execute([$user_id]);
 
     echo json_encode(["status" => "success", "message" => "User deleted"]);

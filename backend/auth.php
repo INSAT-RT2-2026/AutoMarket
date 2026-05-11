@@ -20,8 +20,10 @@ if ($action === "register") {
     try {
         $stmt = $pdo->prepare("INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)");
         $stmt->execute([$name, $email, $phone, $password]);
+        $newId = $pdo->lastInsertId();
         echo json_encode([
             "status" => "success",
+            "user_id" => $newId,
             "name"   => $name,
             "email"  => $email,
             "phone"  => $phone,
@@ -43,6 +45,7 @@ if ($action === "login") {
     if ($user && password_verify($password, $user['password'])) {
         echo json_encode([
             "status"  => "success",
+            "user_id" => $user['user_id'],
             "message" => "Logged in",
             "name"    => $user['name'],
             "email"   => $user['email'],

@@ -14,28 +14,40 @@ services:
       DB_NAME: tunluxauto
       DB_USER: tunluxuser
       DB_PASSWORD: tunluxpass
-      DB_PORT: 5432
+      DB_PORT: 3306
     depends_on:
       db:
         condition: service_healthy
 
   db:
-    image: postgres:15
+    image: mysql:8.0 
     restart: always
     environment:
-      POSTGRES_DB: tunluxauto
-      POSTGRES_USER: tunluxuser
-      POSTGRES_PASSWORD: tunluxpass
+      MYSQL_DATABASE: tunluxauto
+      MYSQL_USER: tunluxuser
+      MYSQL_PASSWORD: tunluxpass
+      MYSQL_ROOT_PASSWORD: rootpass
     ports:
-      - "5432:5432"
+      - "3307:3306"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tunluxuser -d tunluxauto"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
       interval: 5s
       timeout: 5s
       retries: 10
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - "8081:80" 
+    environment:
+      PMA_HOST: db 
+      PMA_USER: tunluxuser
+      PMA_PASSWORD: tunluxpass
+    depends_on:
+      - db
 
 volumes:
   db_data:

@@ -21,6 +21,7 @@ function login() {
         if (data.status === "success") {
             // Save user name in localStorage
             localStorage.setItem("user", JSON.stringify({
+                id:    data.user_id,
                 name:  data.name,
                 email: data.email,
                 phone: data.phone,

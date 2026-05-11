@@ -19,14 +19,12 @@ if (!$data || empty($data->name) || empty($data->phone) || empty($data->email)) 
     exit;
 }
 
-$name    = $data->name;
-$phone   = $data->phone;
-$email   = $data->email;
-$car     = $data->car_interest ?? "Not specified";
-$message = $data->message ?? "No message";
+$user_id  = intval($data->user_id);
+$car_name = $data->car_name ?? null;
+$message  = $data->message  ?? null;
 
-$stmt = $pdo->prepare("INSERT INTO contacts (name, phone, email, car, message) VALUES (?, ?, ?, ?, ?)");
-$stmt->execute([$name, $phone, $email, $car, $message]);
+$stmt = $pdo->prepare("INSERT INTO contacts (user_id, car_name, message) VALUES (?, ?, ?)");
+$stmt->execute([$user_id, $car_name, $message]);
 
 echo json_encode(["status" => "success"]);
 ?>

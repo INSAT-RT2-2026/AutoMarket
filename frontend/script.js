@@ -290,10 +290,54 @@ document.addEventListener('click', function(e) {
 
 function renderCarDetails(car, container) {
     if (!car) {
+        document.title = 'Car Not Found — TunLuxAuto';
         container.innerHTML = `
-            <h2>Car not found</h2>
-            <p style="color:#00f0ff; font-weight:bold;">The car id in the URL is invalid.</p>
-            <a class="back-link" href="index.html#collection">Back to collection</a>
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 60vh;
+                text-align: center;
+                padding: 2rem;
+            ">
+                <div style="
+                    font-size: 6rem;
+                    font-weight: 900;
+                    color: transparent;
+                    -webkit-text-stroke: 2px #d4af37;
+                    letter-spacing: 0.1em;
+                    line-height: 1;
+                    margin-bottom: 1.5rem;
+                    animation: slideUp 0.7s both;
+                ">404</div>
+                <h2 style="
+                    color: #fff;
+                    font-size: 1.5rem;
+                    margin-bottom: 0.8rem;
+                    animation: slideUp 0.7s 0.15s both;
+                ">This car doesn't exist</h2>
+                <p style="
+                    color: #888;
+                    font-size: 0.95rem;
+                    margin-bottom: 2rem;
+                    animation: slideUp 0.7s 0.3s both;
+                ">The ID in the URL is invalid or the listing has been removed.</p>
+                <a href="index.html#collection" style="
+                    display: inline-block;
+                    padding: 12px 32px;
+                    background: #d4af37;
+                    color: black;
+                    font-weight: bold;
+                    border-radius: 25px;
+                    text-decoration: none;
+                    transition: transform 0.2s;
+                    animation: slideUp 0.7s 0.45s both;
+                " onmouseover="this.style.transform='scale(1.05)'"
+                onmouseout="this.style.transform='scale(1)'">
+                    Back to Collection
+                </a>
+            </div>
         `;
         return;
     }

@@ -12,8 +12,12 @@ $data = json_decode(file_get_contents("php://input"));
 $action = $data->action;
 
 if ($action === "register") {
-    $name = $data->name;
-    $email = $data->email;
+    $name  = strip_tags(trim($data->name));
+    $email = filter_var(trim($data->email), FILTER_VALIDATE_EMAIL);
+    if (!$email) {
+        echo json_encode(["status" => "error", "message" => "Invalid email"]);
+        exit;
+    }
     $phone = $data->phone;
     $password = password_hash($data->password, PASSWORD_DEFAULT);
 

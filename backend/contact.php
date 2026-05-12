@@ -19,9 +19,30 @@ if (!$data || empty($data->user_id)) {
     exit;
 }
 
-$user_id  = intval($data->user_id);
-$car_name = $data->car_name ?? null;
-$message  = $data->message  ?? null;
+$user_id = intval($data->user_id ?? 0);
+if ($user_id <= 0) {
+    echo json_encode(["status" => "error", "message" => "Invalid user"]);
+    exit;
+}
+
+$check = $pdo->prepare("SELECT user_id FROM users WHERE user_id = ?");
+$check->execute([$user_id]);
+if (!$check->fetch()) {
+    echo json_encode(["status" => "error", "message" => "User not found"]);
+    exit;
+}
+
+$car_name = isset($data->car_name) ? strip_tags(trim($data->car_name)) : null;
+$message  = isset($data->message)  ? strip_tags(trim($data->message))  : null;
+
+if ($car_name && strlen($car_name) > 150) {
+    echo json_encode(["status" => "error", "message" => "Invalid car name"]);
+    exit;
+}
+if ($message && strlen($message) > 1000) {
+    echo json_encode(["status" => "error", "message" => "Message too long"]);
+    exit;
+}
 
 $stmt = $pdo->prepare("INSERT INTO contacts (user_id, car_name, message) VALUES (?, ?, ?)");
 $stmt->execute([$user_id, $car_name, $message]);

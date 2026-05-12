@@ -1,5 +1,5 @@
 function submitForm() {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem("user"));
     const message = document.getElementById("message").value.trim() || null;
     const car_name = document.getElementById("carInterest").value || null;
 

@@ -14,7 +14,9 @@ CREATE TABLE IF NOT EXISTS contacts (
     car_name VARCHAR(150),
     message TEXT,
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    admin_reply TEXT,
+    
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 

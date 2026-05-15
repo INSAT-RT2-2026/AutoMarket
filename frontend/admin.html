@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TunLuxAuto - Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+    <style>
+        .admin-page {
+            padding: 6rem 5% 4rem;
+            min-height: 100vh;
+            background: #0a0a0a;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .admin-header h1 {
+            color: #d4af37;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+        }
+
+        .admin-table-wrapper {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        th {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            color: #d4af37;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #333;
+        }
+
+        td {
+            padding: 1rem 1.2rem;
+            color: #ccc;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .role-admin {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            border: 1px solid #d4af37;
+        }
+
+        .role-user {
+            background: rgba(0, 240, 255, 0.1);
+            color: #00f0ff;
+            border: 1px solid #00f0ff;
+        }
+
+        .action-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            margin-right: 6px;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .btn-role {
+            background: rgba(212, 175, 55, 0.15);
+            color: #d4af37;
+            border: 1px solid #d4af37;
+        }
+
+        .btn-password {
+            background: rgba(0, 240, 255, 0.1);
+            color: #00f0ff;
+            border: 1px solid #00f0ff;
+        }
+
+        .btn-delete {
+            background: rgba(255, 80, 80, 0.1);
+            color: #ff5050;
+            border: 1px solid #ff5050;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            animation: slideUp 0.25s ease;
+        }
+
+        .modal h3 {
+            color: #d4af37;
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+
+        .modal input, .modal select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .modal select option {
+            background: #1a1a2e;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: flex-end;
+        }
+
+        .btn-confirm {
+            padding: 8px 22px;
+            background: #d4af37;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-confirm:hover { transform: scale(1.05); }
+
+        .btn-cancel {
+            padding: 8px 22px;
+            background: transparent;
+            color: #888;
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #1a3a1a; color: #4caf50; border: 1px solid #4caf50; }
+        .toast.error   { background: #3a1a1a; color: #ff5050; border: 1px solid #ff5050; }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #555;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            min-width: 140px;
+        }
+
+        .stat-card .label {
+            color: #666;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-card .value {
+            color: #d4af37;
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">TunLuxAuto</a>
+        <div class="nav-links">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#collection">Collection</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+            <div id="navUserMenu">
+                <span id="navUserName" class="nav-login-btn">Me</span>
+                <div id="navDropdown">
+                    <div id="navDropdownHello">Hello, User!</div>
+                    <a href="admin.html" id="navAdminLink" style="display:none; color:#d4af37;">⚙️ Admin Panel</a>
+                    <a href="#" onclick="logout()">➜ Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-page">
+        <div class="admin-header">
+            <h1>⚙️ Admin Panel</h1>
+        </div>
+
+        <div class="stats-bar" id="statsBar"></div>
+
+        <div class="admin-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr><td colspan="7" class="empty-state">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Role Modal -->
+    <div class="modal-overlay" id="roleModal">
+        <div class="modal">
+            <h3>Change Role</h3>
+            <select id="roleSelect">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('roleModal')">Cancel</button>
+                <button class="btn-confirm" onclick="confirmSetRole()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <h3>Set New Password</h3>
+            <input type="password" id="newPasswordInput" placeholder="New password (min 6 chars)">
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('passwordModal')">Cancel</button>
+                <button class="btn-confirm" onclick="confirmSetPassword()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentUserId = null;
+        let adminEmail = null;
+
+        function getAdmin() {
+            const raw = localStorage.getItem('user');
+            if (!raw) return null;
+            try { return JSON.parse(raw); } catch { return null; }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast ${type} show`;
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+            currentUserId = null;
+        }
+
+        function updateNavbar(user) {
+            document.getElementById('navAuthBtn').style.display = 'none';
+            const menu = document.getElementById('navUserMenu');
+            menu.style.display = 'block';
+            const nameEl = document.getElementById('navUserName');
+            nameEl.textContent = user.name.charAt(0).toUpperCase();
+            document.getElementById('navDropdownHello').textContent = 'Hello ' + user.name + '!';
+            document.getElementById('navAdminLink').style.display = 'block';
+            nameEl.onclick = () => {
+                const d = document.getElementById('navDropdown');
+                d.style.display = d.style.display === 'block' ? 'none' : 'block';
+            };
+        }
+
+        async function adminRequest(body) {
+            const res = await fetch('/backend/admin.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_email: adminEmail, ...body })
+            });
+            return res.json();
+        }
+
+        async function loadUsers() {
+            const data = await adminRequest({ action: 'get_users' });
+            if (data.status !== 'success') {
+                showToast(data.message || 'Failed to load users', 'error');
+                return;
+            }
+            const users = data.users;
+            renderStats(users);
+            renderTable(users);
+        }
+
+        function renderStats(users) {
+            const total = users.length;
+            const admins = users.filter(u => u.role === 'admin').length;
+            document.getElementById('statsBar').innerHTML = `
+                <div class="stat-card"><div class="label">Total Users</div><div class="value">${total}</div></div>
+                <div class="stat-card"><div class="label">Admins</div><div class="value">${admins}</div></div>
+                <div class="stat-card"><div class="label">Regular Users</div><div class="value">${total - admins}</div></div>
+            `;
+        }
+
+        function renderTable(users) {
+            const tbody = document.getElementById('usersTableBody');
+            if (!users.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No users found.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td>#${u.user_id}</td>
+                    <td>${esc(u.name)}</td>
+                    <td>${esc(u.email)}</td>
+                    <td>${esc(u.phone)}</td>
+                    <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+                    <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</td>
+                    <td>
+                        <button class="action-btn btn-role" onclick="openRoleModal(${u.user_id}, '${u.role}')">Role</button>
+                        <button class="action-btn btn-password" onclick="openPasswordModal(${u.user_id})">Password</button>
+                        ${u.role !== 'admin' ? `<button class="action-btn btn-delete" onclick="deleteUser(${u.user_id})">Delete</button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function esc(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function openRoleModal(userId, currentRole) {
+            currentUserId = userId;
+            document.getElementById('roleSelect').value = currentRole;
+            openModal('roleModal');
+        }
+
+        async function confirmSetRole() {
+            const newRole = document.getElementById('roleSelect').value;
+            const data = await adminRequest({ action: 'set_role', user_id: currentUserId, new_role: newRole });
+            closeModal('roleModal');
+            if (data.status === 'success') {
+                showToast('Role updated');
+                loadUsers();
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        function openPasswordModal(userId) {
+            currentUserId = userId;
+            document.getElementById('newPasswordInput').value = '';
+            openModal('passwordModal');
+        }
+
+        async function confirmSetPassword() {
+            const pw = document.getElementById('newPasswordInput').value;
+            if (pw.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+            const data = await adminRequest({ action: 'set_password', user_id: currentUserId, new_password: pw });
+            closeModal('passwordModal');
+            if (data.status === 'success') {
+                showToast('Password updated');
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Delete this user? This cannot be undone.')) return;
+            const data = await adminRequest({ action: 'delete_user', user_id: userId });
+            if (data.status === 'success') {
+                showToast('User deleted');
+                loadUsers();
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = getAdmin();
+            if (!user || user.role !== 'admin') {
+                window.location.href = 'index.html';
+                return;
+            }
+            adminEmail = user.email;
+            updateNavbar(user);
+            loadUsers();
+            document.addEventListener('click', (event) => {
+                const navUserMenu = document.getElementById('navUserMenu');
+                const navDropdown = document.getElementById('navDropdown');
+                if (!navUserMenu || !navDropdown) return;
+                if (!navUserMenu.contains(event.target)) {
+                    navDropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

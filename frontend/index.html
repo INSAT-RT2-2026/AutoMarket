@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TunLuxAuto - Premium Cars</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">TunLuxAuto</a>
+        <div class="nav-links">
+            <a href="#home" style="color:#d4af37;">Home</a>
+            <a href="#collection">Collection</a>
+            <a href="sell.html">Sell Your Car</a> 
+            <a href="contact.html">Contact</a>
+            <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+
+            <div id="navUserMenu">
+                <span id="navUserName" class="nav-login-btn">Me</span>
+                <div id="navDropdown">
+                    <div id="navDropdownHello">Hello, User!</div>
+                    <a href="admin.html" id="navAdminLink" style="display:none; color:#d4af37;">⚙️ Admin Panel</a>
+                    <a href="contact-history.html" id="navHistoryLink">📋 My Inquiries</a>
+                    <a href="#" onclick="logout()">➜ Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <h1>Searching For a Luxurious Car?</h1>
+        <p>Premium vehicles curated for discerning buyers</p>
+
+        <div class="search-box">
+
+            <div class="custom-select-wrapper" id="makeWrapper">
+                <button class="custom-select-trigger" id="makeTrigger" onclick="toggleDropdown('make')">
+                    <span id="makeLabel">Any Make</span>
+                    <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                <ul class="custom-select-list" id="makeList">
+                    <li class="custom-option selected" data-value="" onclick="selectMake(this)">Any Make</li>
+                    <li class="custom-option" data-value="bmw" onclick="selectMake(this)">BMW</li>
+                    <li class="custom-option" data-value="porsche" onclick="selectMake(this)">Porsche</li>
+                    <li class="custom-option" data-value="audi" onclick="selectMake(this)">Audi</li>
+                    <li class="custom-option" data-value="ford" onclick="selectMake(this)">Ford</li>
+                </ul>
+                <input type="hidden" id="make" value="">
+            </div>
+
+            <div class="custom-select-wrapper" id="modelWrapper">
+                <button class="custom-select-trigger" id="modelTrigger" onclick="toggleDropdown('model')">
+                    <span id="modelLabel">Any Model</span>
+                    <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                <ul class="custom-select-list" id="modelList">
+                    <li class="custom-option selected" data-value="" onclick="selectModel(this)">Any Model</li>
+                </ul>
+                <input type="hidden" id="model" value="">
+            </div>
+
+            <button onclick="startSearch()" class="search-btn">Search</button>
+        </div>
+    </section>
+
+    <section class="featured">
+        <h2>Featured Cars</h2>
+        <div class="featured-grid">
+            <div class="car-card" onclick="openCarDetails(6)">
+                <img src="car_images/R8.jpg" alt="Audi R8">
+                <h3>Audi R8</h3>
+                <p>480,000 DT</p>
+                <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(6)">View Description</button>
+            </div>
+
+            <div class="car-card" onclick="openCarDetails(1)">
+                <img src="car_images/911.webp" alt="Porsche 911">
+                <h3>Porsche 911</h3>
+                <p>450,000 DT</p>
+                <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(1)">View Description</button>
+            </div>
+
+            <div class="car-card" onclick="openCarDetails(8)">
+                <img src="car_images/RS7.webp" alt="Audi RS7">
+                <h3>Audi RS7</h3>
+                <p>360,000 DT</p>
+                <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(8)">View Description</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="collection" class="collection">
+        <h2>Our Collection</h2>
+        <div class="filters">
+            <button class="filter-tab active" onclick="filterCars('all')">All</button>
+            <button class="filter-tab" onclick="filterCars('supercars')">Supercars</button>
+            <button class="filter-tab" onclick="filterCars('luxury')">Luxury</button>
+            <button class="filter-tab" onclick="filterCars('exotic')">Exotic</button>
+        </div>
+
+        <div class="sort-box">
+    <div class="custom-select-wrapper" id="sortWrapper">
+        <button class="custom-select-trigger" id="sortTrigger" onclick="toggleDropdown('sort')">
+            <span id="sortLabel">Sort By</span>
+            <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
+        </button>
+        <ul class="custom-select-list" id="sortList">
+            <li class="custom-option selected" data-value="" onclick="selectSort(this)">Sort By</li>
+            <li class="custom-option" data-value="priceLow" onclick="selectSort(this)">Price: Low → High</li>
+            <li class="custom-option" data-value="priceHigh" onclick="selectSort(this)">Price: High → Low</li>
+            <li class="custom-option" data-value="newest" onclick="selectSort(this)">Newest</li>
+            <li class="custom-option" data-value="power" onclick="selectSort(this)">Most Powerful</li>
+        </ul>
+        <input type="hidden" id="sort" value="">
+    </div>
+</div>
+
+        <div id="carsGrid" class="cars-grid"></div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-item">
+            <div class="stat-number" data-target="150">0</div>
+            <div class="stat-label">Cars Sold</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="12">0</div>
+            <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="98">0</div>
+            <div class="stat-label">% Satisfaction</div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Get In Touch</h2>
+        <p>Ready to buy? Contact our team today.</p>
+        <button onclick="window.location.href='contact.html'" class="contact-btn">Contact Us</button>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

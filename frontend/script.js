@@ -6,6 +6,7 @@ const allCars = [
         "year": 2023,
         "price": 450000,
         "type": "sports",
+        "horsepower": 450,
         "image": "car_images/911.webp",
         "specs": "3.0L Twin-Turbo • PDK • 2k miles",
         "description": "Iconic rear-engine performance with razor-sharp handling and daily comfort."
@@ -17,6 +18,7 @@ const allCars = [
         "year": 2024,
         "price": 315000,
         "type": "electric",
+        "horsepower": 522,
         "image": "car_images/E-tron GT.webp",
         "specs": "Electric • AWD • 1k miles",
         "description": "Instant torque, smooth long-range driving, and an ultra-modern electric feel."
@@ -28,6 +30,7 @@ const allCars = [
         "year": 2024,
         "price": 264000,
         "type": "suv",
+        "horsepower": 516,
         "image": "car_images/IX.webp",
         "specs": "Electric • AWD • New",
         "description": "A luxury electric SUV with effortless power and a spacious, premium cabin."
@@ -39,6 +42,7 @@ const allCars = [
         "year": 2024,
         "price": 224000,
         "type": "sedan",
+        "horsepower": 503,
         "image": "car_images/M3.webp",
         "specs": "3.0L Twin-Turbo • Automatic • 5k miles",
         "description": "Legendary M performance tuned for precision acceleration and confident control."
@@ -50,6 +54,7 @@ const allCars = [
         "year": 2023,
         "price": 265000,
         "type": "sports",
+        "horsepower": 450,
         "image": "car_images/MUSTANG.jpg",
         "specs": "5.0L V8 • Manual • 8k miles",
         "description": "Classic V8 muscle with an engaging manual drive feel and unmistakable style."
@@ -61,6 +66,7 @@ const allCars = [
         "year": 2023,
         "price": 480000,
         "type": "supercar",
+        "horsepower": 562,
         "image": "car_images/R8.jpg",
         "specs": "5.2L V10 • AWD • 3k miles",
         "description": "A track-bred V10 supercar delivering breathtaking acceleration and composed grip."
@@ -72,6 +78,7 @@ const allCars = [
         "year": 2023,
         "price": 240000,
         "type": "truck",
+        "horsepower": 450,
         "image": "car_images/RAPTOR.webp",
         "specs": "3.5L EcoBoost • 4WD • 10k miles",
         "description": "Built for the wild: tough stance, confident traction, and serious off-road capability."
@@ -83,6 +90,7 @@ const allCars = [
         "year": 2024,
         "price": 360000,
         "type": "sedan",
+        "horsepower": 591,
         "image": "car_images/RS7.webp",
         "specs": "4.0L V8 • AWD • 1.5k miles",
         "description": "Grand touring power in a sleek sedan—fast, refined, and always in control."
@@ -94,6 +102,7 @@ const allCars = [
         "year": 2023,
         "price": 280000,
         "type": "electric",
+        "horsepower": 408,
         "image": "car_images/TAYCAN.webp",
         "specs": "Electric • RWD • 6k miles",
         "description": "Electric performance with Porsche precision and a smooth, confident ride."
@@ -105,6 +114,7 @@ const allCars = [
         "year": 2023,
         "price": 300000,
         "type": "electric",
+        "horsepower": 469,
         "image": "car_images/Taycan Cross Turismo.webp",
         "specs": "Electric • AWD • 4k miles",
         "description": "Sporty wagon versatility with elevated comfort and capable all-weather performance."
@@ -116,11 +126,14 @@ const allCars = [
         "year": 2023,
         "price": 162000,
         "type": "suv",
+        "horsepower": 248,
         "image": "car_images/X4.webp",
         "specs": "2.0L Turbo • AWD • 12k miles",
         "description": "A premium compact SUV with dynamic driving, modern tech, and everyday comfort."
     }
 ];
+
+let currentCars = [...allCars];
 
 document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
@@ -147,10 +160,15 @@ function initHomePage() {
         }
     }
     if (document.getElementById('carsGrid')) {
-        displayCars(allCars);
+        currentCars = [...allCars];
+        displayCars(currentCars);
     }
     if (document.getElementById('car-interest')) {
         populateCarSelect(allCars);
+    }
+    const sortSelect = document.getElementById("sort");
+    if (sortSelect) {
+        sortSelect.addEventListener("change", sortCars);
     }
 }
 
@@ -187,17 +205,39 @@ function displayCars(cars) {
 function filterCars(category) {
     document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
-    let filtered = [];
+
     if (category === 'all') {
-        filtered = allCars;
+        currentCars = [...allCars];
     } else if (category === 'supercars') {
-        filtered = allCars.filter(car => ['sports', 'supercar'].includes(car.type));
+        currentCars = allCars.filter(car => ['sports', 'supercar'].includes(car.type));
     } else if (category === 'luxury') {
-        filtered = allCars.filter(car => ['sedan', 'suv', 'electric', 'truck'].includes(car.type));
+        currentCars = allCars.filter(car => ['sedan', 'suv', 'electric', 'truck'].includes(car.type));
     } else if (category === 'exotic') {
-        filtered = allCars.filter(car => ['supercar', 'electric'].includes(car.type));
+        currentCars = allCars.filter(car => ['supercar', 'electric'].includes(car.type));
     }
-    displayCars(filtered);
+
+    displayCars(currentCars);
+}
+
+function sortCars() {
+    const sortEl = document.getElementById("sort");
+    if (!sortEl) return;
+    const value = sortEl.value;
+
+    let sorted = [...currentCars];
+
+    if (value === "priceLow") {
+        sorted.sort((a, b) => a.price - b.price);
+    } else if (value === "priceHigh") {
+        sorted.sort((a, b) => b.price - a.price);
+    } else if (value === "newest") {
+        sorted.sort((a, b) => b.year - a.year);
+    } else if (value === "power") {
+        sorted.sort((a, b) => b.horsepower - a.horsepower);
+    }
+
+    currentCars = sorted;
+    displayCars(currentCars);
 }
 
 function populateCarSelect(cars) {
@@ -211,7 +251,6 @@ function populateCarSelect(cars) {
     });
 }
 
-/* ── Custom Dropdown Logic ── */
 const modelsMap = {
     bmw:     ["M3", "X4", "iX"],
     porsche: ["911", "Taycan", "Taycan Cross Turismo"],
@@ -222,7 +261,6 @@ const modelsMap = {
 function toggleDropdown(which) {
     const wrapper = document.getElementById(which + 'Wrapper');
     const isOpen  = wrapper.classList.contains('open');
-    // close all first
     document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
     if (!isOpen) wrapper.classList.add('open');
 }
@@ -230,15 +268,11 @@ function toggleDropdown(which) {
 function selectMake(el) {
     const value = el.dataset.value;
     const label = el.textContent;
-    // update hidden input + label
     document.getElementById('make').value = value;
     document.getElementById('makeLabel').textContent = label;
-    // highlight selected option
     document.querySelectorAll('#makeList .custom-option').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
-    // close
     document.getElementById('makeWrapper').classList.remove('open');
-    // rebuild model list
     updateModels(value);
 }
 
@@ -255,7 +289,6 @@ function selectModel(el) {
 function updateModels(make) {
     make = make || document.getElementById('make').value;
     const list = document.getElementById('modelList');
-    // reset
     list.innerHTML = '<li class="custom-option selected" data-value="" onclick="selectModel(this)">Any Model</li>';
     document.getElementById('model').value = '';
     document.getElementById('modelLabel').textContent = 'Any Model';
@@ -281,7 +314,6 @@ function startSearch() {
     document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Close dropdowns when clicking outside
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.custom-select-wrapper')) {
         document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
@@ -436,7 +468,6 @@ function updateNavbar() {
             const helloEl = document.getElementById('navDropdownHello');
             if (helloEl) helloEl.textContent = 'Hello ' + parsed.name + '!';
 
-            // Show admin link if user is admin
             const adminLinkEl = document.getElementById('navAdminLink');
             if (adminLinkEl) {
                 adminLinkEl.style.display = parsed.role === 'admin' ? 'block' : 'none';
@@ -456,4 +487,13 @@ function updateNavbar() {
 function logout() {
     localStorage.removeItem('user');
     window.location.reload();
+}
+function selectSort(el) {
+    const value = el.dataset.value;
+    document.getElementById('sort').value = value;
+    document.getElementById('sortLabel').textContent = el.textContent;
+    document.querySelectorAll('#sortList .custom-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('sortWrapper').classList.remove('open');
+    sortCars();
 }

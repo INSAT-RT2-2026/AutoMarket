@@ -14,6 +14,7 @@
         <div class="nav-links">
             <a href="#home" style="color:#d4af37;">Home</a>
             <a href="#collection">Collection</a>
+            <a href="sell.html">Sell Your Car</a> 
             <a href="contact.html">Contact</a>
             <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
 
@@ -35,7 +36,6 @@
 
         <div class="search-box">
 
-            <!-- Make Dropdown -->
             <div class="custom-select-wrapper" id="makeWrapper">
                 <button class="custom-select-trigger" id="makeTrigger" onclick="toggleDropdown('make')">
                     <span id="makeLabel">Any Make</span>
@@ -53,7 +53,6 @@
                 <input type="hidden" id="make" value="">
             </div>
 
-            <!-- Model Dropdown -->
             <div class="custom-select-wrapper" id="modelWrapper">
                 <button class="custom-select-trigger" id="modelTrigger" onclick="toggleDropdown('model')">
                     <span id="modelLabel">Any Model</span>
@@ -105,6 +104,25 @@
             <button class="filter-tab" onclick="filterCars('luxury')">Luxury</button>
             <button class="filter-tab" onclick="filterCars('exotic')">Exotic</button>
         </div>
+
+        <div class="sort-box">
+    <div class="custom-select-wrapper" id="sortWrapper">
+        <button class="custom-select-trigger" id="sortTrigger" onclick="toggleDropdown('sort')">
+            <span id="sortLabel">Sort By</span>
+            <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
+        </button>
+        <ul class="custom-select-list" id="sortList">
+            <li class="custom-option selected" data-value="" onclick="selectSort(this)">Sort By</li>
+            <li class="custom-option" data-value="priceLow" onclick="selectSort(this)">Price: Low → High</li>
+            <li class="custom-option" data-value="priceHigh" onclick="selectSort(this)">Price: High → Low</li>
+            <li class="custom-option" data-value="newest" onclick="selectSort(this)">Newest</li>
+            <li class="custom-option" data-value="power" onclick="selectSort(this)">Most Powerful</li>
+        </ul>
+        <input type="hidden" id="sort" value="">
+    </div>
+</div>
 
         <div id="carsGrid" class="cars-grid"></div>
     </section>

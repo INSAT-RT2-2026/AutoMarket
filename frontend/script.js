@@ -160,8 +160,7 @@ function initHomePage() {
         }
     }
     if (document.getElementById('carsGrid')) {
-        currentCars = [...allCars];
-        displayCars(currentCars);
+        loadCars();
     }
     if (document.getElementById('car-interest')) {
         populateCarSelect(allCars);
@@ -170,15 +169,74 @@ function initHomePage() {
     if (sortSelect) {
         sortSelect.addEventListener("change", sortCars);
     }
+
+    if (document.getElementById('carsGrid')) {
+        loadCars();
+    }
+}
+
+function loadCars() {
+    fetch('/backend/cars.php')
+    .then(res => res.json())
+    .then(data => {
+        const dbCars = (data.cars || []).map(c => ({
+            id: 'db-' + c.car_id,
+            brand: c.brand,
+            model: c.model,
+            year: c.year,
+            price: parseFloat(c.price),
+            horsepower: c.horsepower,
+            image: c.images ? JSON.parse(c.images)[0] : 'car_images/default.jpg',
+            specs: `${c.year} • ${c.horsepower}hp`,
+            description: c.description,
+            type: 'listing'
+        }));
+        currentCars = [...allCars, ...dbCars];
+        displayCars(currentCars);
+    })
+    .catch(() => {
+        currentCars = [...allCars];
+        displayCars(currentCars);
+    });
 }
 
 function initCarDetailsPage() {
     const detailsContainer = document.getElementById('carDetails');
     if (!detailsContainer) return;
+
     const params = new URLSearchParams(window.location.search);
-    const id = Number(params.get('id'));
-    const car = allCars.find(c => c.id === id);
-    renderCarDetails(car, detailsContainer);
+    const rawId = params.get('id');
+
+    if (rawId && rawId.startsWith('db-')) {
+        const dbId = rawId.replace('db-', '');
+        fetch(`/backend/cars.php?id=${dbId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const c = data.car;
+                const images = c.images ? JSON.parse(c.images) : [];
+                renderCarDetails({
+                    id: 'db-' + c.car_id,
+                    brand: c.brand,
+                    model: c.model,
+                    year: c.year,
+                    price: parseFloat(c.price),
+                    horsepower: c.horsepower,
+                    image: images[0] || 'car_images/default.jpg',
+                    specs: `${c.year} • ${c.horsepower}hp`,
+                    description: c.description,
+                    type: 'listing'
+                }, detailsContainer);
+            } else {
+                renderCarDetails(null, detailsContainer);
+            }
+        })
+        .catch(() => renderCarDetails(null, detailsContainer));
+    } else {
+        const id = Number(rawId);
+        const car = allCars.find(c => c.id === id);
+        renderCarDetails(car, detailsContainer);
+    }
 }
 
 function openCarDetails(carId) {
@@ -189,13 +247,13 @@ function displayCars(cars) {
     const container = document.getElementById('carsGrid');
     if (!container) return;
     container.innerHTML = cars.map(car => `
-        <div class="car-card" data-type="${car.type}" onclick="openCarDetails(${car.id})">
+        <div class="car-card" data-type="${car.type}" onclick="openCarDetails('${car.id}')">
             <img src="${car.image}" alt="${car.brand} ${car.model}">
             <div class="car-info">
                 <h3>${car.brand} ${car.model} ${car.year}</h3>
                 <p>${car.specs}</p>
                 <p class="price">${car.price.toLocaleString()} DT</p>
-                <button class="details-btn" onclick="event.stopPropagation(); openCarDetails(${car.id})">View Description</button>
+                <button class="details-btn" onclick="event.stopPropagation(); openCarDetails('${car.id}')">View Description</button>
                 <button class="buy-btn" onclick="event.stopPropagation(); inquire('${car.brand} ${car.model}')">Buy Now</button>
             </div>
         </div>
@@ -412,16 +470,17 @@ function animateCounters() {
     const counters = document.querySelectorAll('.stat-number');
     counters.forEach(counter => {
         const target = +counter.getAttribute('data-target');
+        const suffix = counter.getAttribute('data-suffix') || '';
         const duration = 2000;
         const step = target / (duration / 16);
         let current = 0;
         const update = () => {
             current += step;
             if (current < target) {
-                counter.textContent = Math.floor(current);
+                counter.textContent = Math.floor(current) + suffix;
                 requestAnimationFrame(update);
             } else {
-                counter.textContent = target;
+                counter.textContent = target + suffix;
             }
         };
         update();

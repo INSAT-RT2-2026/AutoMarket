@@ -27,5 +27,13 @@ $stmt = $pdo->prepare("SELECT * FROM contacts WHERE user_id = ? ORDER BY submitt
 $stmt->execute([$user_id]);
 $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-echo json_encode(["status" => "success", "contacts" => $contacts]);
+$email = $data->email ?? '';
+$listings = [];
+if ($email) {
+    $lstmt = $pdo->prepare("SELECT car_id, brand, model, year, price, status, submitted_at FROM cars WHERE seller_email = ? ORDER BY submitted_at DESC");
+    $lstmt->execute([$email]);
+    $listings = $lstmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+echo json_encode(["status" => "success", "contacts" => $contacts, "listings" => $listings]);
 ?>

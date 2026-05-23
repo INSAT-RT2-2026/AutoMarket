@@ -83,6 +83,7 @@ function register() {
     .then(data => {
         if (data.status === "success") {
             localStorage.setItem("user", JSON.stringify({
+                id:    data.user_id,
                 name:  data.name,
                 email: data.email,
                 phone: data.phone,

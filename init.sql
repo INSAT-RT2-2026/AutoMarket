@@ -20,13 +20,18 @@ CREATE TABLE IF NOT EXISTS contacts (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-'''
 CREATE TABLE IF NOT EXISTS cars (
     car_id INT AUTO_INCREMENT PRIMARY KEY,
     brand VARCHAR(100) NOT NULL,
     model VARCHAR(100) NOT NULL,
     year INT NOT NULL,
+    horsepower INT,
     price DECIMAL(10, 2) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    seller_name VARCHAR(100) NOT NULL,
+    seller_phone VARCHAR(20) NOT NULL,
+    seller_email VARCHAR(150) NOT NULL,
+    images TEXT,
+    status VARCHAR(20) DEFAULT 'pending',
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

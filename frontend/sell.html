@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sell Your Car</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
 </head>
 <body>
     <nav class="navbar">
@@ -16,6 +17,15 @@
         <a href="sell.html" class="active">Sell Your Car</a>
         <a href="contact.html">Contact</a>
         <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+        <div id="navUserMenu">
+    <span id="navUserName" class="nav-login-btn">Me</span>
+    <div id="navDropdown">
+        <div id="navDropdownHello">Hello, User!</div>
+        <a href="admin.html" id="navAdminLink" style="display:none; color:#d4af37;">⚙️ Admin Panel</a>
+        <a href="contact-history.html" id="navHistoryLink">📋 My Inquiries</a>
+        <a href="#" onclick="logout()">➜] Logout</a>
+    </div>
+</div>
     </div>
     </nav>
 
@@ -25,7 +35,7 @@
             <h2>Sell Your Car</h2>
             <p class="subtitle">List your vehicle and reach premium buyers</p>
 
-            <form id="sellForm" enctype="multipart/form-data">
+            <form id="sellForm">
 
                 <div class="form-grid">
                     <input type="text" name="brand" placeholder="Brand" required>
@@ -50,11 +60,14 @@
 
                 <button type="submit" class="submit-btn">Submit Car</button>
 
-                <p id="responseMsg"></p>
+                
             </form>
+            <p id="responseMsg"></p>
         </div>
 
     </section>
+
+    <script src="sell.js"></script>
 
 </body>
 </html>

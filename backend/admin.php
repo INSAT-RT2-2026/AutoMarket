@@ -88,5 +88,50 @@ if ($action === "delete_user") {
     exit;
 }
 
+// ── get_pending_cars ──────────────────────────────────────────────────────────
+if ($action === "get_pending_cars") {
+    $stmt = $pdo->query("SELECT * FROM cars WHERE status = 'pending' ORDER BY submitted_at DESC");
+    $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(["status" => "success", "cars" => $cars]);
+    exit;
+}
+
+// ── set_car_status ────────────────────────────────────────────────────────────
+if ($action === "set_car_status") {
+    $car_id = intval($data->car_id ?? 0);
+    $status = $data->status ?? '';
+    if (!in_array($status, ['approved', 'rejected'])) {
+        echo json_encode(["status" => "error", "message" => "Invalid status"]);
+        exit;
+    }
+    $stmt = $pdo->prepare("UPDATE cars SET status = ? WHERE car_id = ?");
+    $stmt->execute([$status, $car_id]);
+    echo json_encode(["status" => "success"]);
+    exit;
+}
+
+// ── get_inquiries ─────────────────────────────────────────────────────────────
+if ($action === "get_inquiries") {
+    $stmt = $pdo->query("SELECT c.*, u.name as user_name FROM contacts c JOIN users u ON c.user_id = u.user_id ORDER BY c.submitted_at DESC");
+    $inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(["status" => "success", "inquiries" => $inquiries]);
+    exit;
+}
+
+// ── reply_inquiry ─────────────────────────────────────────────────────────────
+if ($action === "reply_inquiry") {
+    $contact_id = intval($data->contact_id ?? 0);
+    $reply = strip_tags(trim($data->reply ?? ''));
+    if (!$contact_id || !$reply) {
+        echo json_encode(["status" => "error", "message" => "Invalid data"]);
+        exit;
+    }
+    $stmt = $pdo->prepare("UPDATE contacts SET admin_reply = ?, status = 'answered' WHERE contact_id = ?");
+    $stmt->execute([$reply, $contact_id]);
+    echo json_encode(["status" => "success"]);
+    exit;
+}
+
 echo json_encode(["status" => "error", "message" => "Unknown action"]);
 ?>
+

@@ -6,255 +6,6 @@
     <title>TunLuxAuto - Admin Panel</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico">
-    <style>
-        .admin-page {
-            padding: 6rem 5% 4rem;
-            min-height: 100vh;
-            background: #0a0a0a;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .admin-header h1 {
-            color: #d4af37;
-            font-size: 1.8rem;
-            letter-spacing: 2px;
-        }
-
-        .admin-table-wrapper {
-            background: #1a1a2e;
-            border: 1px solid #333;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        th {
-            padding: 1rem 1.2rem;
-            text-align: left;
-            color: #d4af37;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #333;
-        }
-
-        td {
-            padding: 1rem 1.2rem;
-            color: #ccc;
-            font-size: 0.9rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            vertical-align: middle;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        tbody tr:hover {
-            background: rgba(255,255,255,0.02);
-        }
-
-        .role-badge {
-            display: inline-block;
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-        .role-admin {
-            background: rgba(212, 175, 55, 0.2);
-            color: #d4af37;
-            border: 1px solid #d4af37;
-        }
-
-        .role-user {
-            background: rgba(0, 240, 255, 0.1);
-            color: #00f0ff;
-            border: 1px solid #00f0ff;
-        }
-
-        .action-btn {
-            padding: 6px 14px;
-            border-radius: 8px;
-            border: none;
-            font-size: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
-            margin-right: 6px;
-        }
-
-        .action-btn:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
-
-        .btn-role {
-            background: rgba(212, 175, 55, 0.15);
-            color: #d4af37;
-            border: 1px solid #d4af37;
-        }
-
-        .btn-password {
-            background: rgba(0, 240, 255, 0.1);
-            color: #00f0ff;
-            border: 1px solid #00f0ff;
-        }
-
-        .btn-delete {
-            background: rgba(255, 80, 80, 0.1);
-            color: #ff5050;
-            border: 1px solid #ff5050;
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-overlay.open {
-            display: flex;
-        }
-
-        .modal {
-            background: #1a1a2e;
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 400px;
-            animation: slideUp 0.25s ease;
-        }
-
-        .modal h3 {
-            color: #d4af37;
-            margin-bottom: 1.2rem;
-            font-size: 1.1rem;
-        }
-
-        .modal input, .modal select {
-            width: 100%;
-            padding: 10px 14px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #444;
-            border-radius: 8px;
-            color: white;
-            font-size: 0.95rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .modal select option {
-            background: #1a1a2e;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 0.8rem;
-            justify-content: flex-end;
-        }
-
-        .btn-confirm {
-            padding: 8px 22px;
-            background: #d4af37;
-            color: black;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .btn-confirm:hover { transform: scale(1.05); }
-
-        .btn-cancel {
-            padding: 8px 22px;
-            background: transparent;
-            color: #888;
-            border: 1px solid #444;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            z-index: 9999;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast.success { background: #1a3a1a; color: #4caf50; border: 1px solid #4caf50; }
-        .toast.error   { background: #3a1a1a; color: #ff5050; border: 1px solid #ff5050; }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #555;
-        }
-
-        .stats-bar {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-card {
-            background: #1a1a2e;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            min-width: 140px;
-        }
-
-        .stat-card .label {
-            color: #666;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.3rem;
-        }
-
-        .stat-card .value {
-            color: #d4af37;
-            font-size: 1.6rem;
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -278,27 +29,62 @@
     <div class="admin-page">
         <div class="admin-header">
             <h1>⚙️ Admin Panel</h1>
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchAdminTab('users', this)">👥 Users</button>
+                <button class="admin-tab" onclick="switchAdminTab('cars', this)">🚗 Pending Cars</button>
+                <button class="admin-tab" onclick="switchAdminTab('inquiries', this)">📋 Inquiries</button>
+            </div>
         </div>
 
         <div class="stats-bar" id="statsBar"></div>
 
-        <div class="admin-table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Role</th>
-                        <th>Joined</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="usersTableBody">
-                    <tr><td colspan="7" class="empty-state">Loading...</td></tr>
-                </tbody>
-            </table>
+        <!-- Users Tab -->
+        <div id="tab-users">
+            <div class="admin-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="7" class="admin-empty">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pending Cars Tab -->
+        <div id="tab-cars" style="display:none">
+            <div id="carsTableBody"></div>
+        </div>
+
+        <!-- Inquiries Tab -->
+        <div id="tab-inquiries" style="display:none">
+            <div class="admin-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Car</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inquiriesTableBody">
+                        <tr><td colspan="7" class="admin-empty">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -329,10 +115,23 @@
         </div>
     </div>
 
+    <!-- Reply Modal -->
+    <div class="modal-overlay" id="replyModal">
+        <div class="modal">
+            <h3>Reply to Inquiry</h3>
+            <textarea id="replyInput" placeholder="Your reply..." rows="4"></textarea>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('replyModal')">Cancel</button>
+                <button class="btn-confirm" onclick="confirmReply()">Send Reply</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
         let currentUserId = null;
+        let currentInquiryId = null;
         let adminEmail = null;
 
         function getAdmin() {
@@ -360,6 +159,7 @@
         function closeModal(id) {
             document.getElementById(id).classList.remove('open');
             currentUserId = null;
+            currentInquiryId = null;
         }
 
         function updateNavbar(user) {
@@ -385,15 +185,26 @@
             return res.json();
         }
 
+        function switchAdminTab(tab, btn) {
+            document.getElementById('statsBar').style.display = tab === 'users' ? 'flex' : 'none';
+            document.getElementById('tab-users').style.display = tab === 'users' ? 'block' : 'none';
+            document.getElementById('tab-cars').style.display = tab === 'cars' ? 'block' : 'none';
+            document.getElementById('tab-inquiries').style.display = tab === 'inquiries' ? 'block' : 'none';
+            document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (tab === 'cars') loadPendingCars();
+            if (tab === 'inquiries') loadInquiries();
+        }
+
+        // ── Users ──────────────────────────────────────────────────────────────
         async function loadUsers() {
             const data = await adminRequest({ action: 'get_users' });
             if (data.status !== 'success') {
                 showToast(data.message || 'Failed to load users', 'error');
                 return;
             }
-            const users = data.users;
-            renderStats(users);
-            renderTable(users);
+            renderStats(data.users);
+            renderTable(data.users);
         }
 
         function renderStats(users) {
@@ -409,7 +220,7 @@
         function renderTable(users) {
             const tbody = document.getElementById('usersTableBody');
             if (!users.length) {
-                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No users found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="admin-empty">No users found.</td></tr>';
                 return;
             }
             tbody.innerHTML = users.map(u => `
@@ -427,10 +238,6 @@
                     </td>
                 </tr>
             `).join('');
-        }
-
-        function esc(str) {
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
 
         function openRoleModal(userId, currentRole) {
@@ -478,6 +285,91 @@
             } else {
                 showToast(data.message || 'Failed', 'error');
             }
+        }
+
+        // ── Pending Cars ───────────────────────────────────────────────────────
+        async function loadPendingCars() {
+            const data = await adminRequest({ action: 'get_pending_cars' });
+            const tbody = document.getElementById('carsTableBody');
+            if (!data.cars || !data.cars.length) {
+                tbody.innerHTML = '<div class="admin-empty">No pending cars.</div>';
+                return;
+            }
+            tbody.innerHTML = data.cars.map(c => {
+                const images = c.images ? JSON.parse(c.images) : [];
+                const thumb = images[0] ? `<img src="${images[0]}" class="pending-car-img">` : '<div class="pending-car-img no-img">No Image</div>';
+                return `
+                    <div class="pending-car-card">
+                        ${thumb}
+                        <div class="pending-car-info">
+                            <div class="pending-car-title">${esc(c.brand)} ${esc(c.model)} <span>${c.year}</span></div>
+                            <div class="pending-car-price">${parseInt(c.price).toLocaleString()} DT</div>
+                            <div class="pending-car-desc">${esc(c.description || 'No description provided.')}</div>
+                            <div class="pending-car-seller">👤 ${esc(c.seller_name)} · ${esc(c.seller_email)} · ${esc(c.seller_phone)}</div>
+                            <div class="pending-car-actions">
+                                <button class="action-btn btn-role" onclick="setCarStatus(${c.car_id}, 'approved')">✅ Approve</button>
+                                <button class="action-btn btn-delete" onclick="setCarStatus(${c.car_id}, 'rejected')">❌ Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function setCarStatus(carId, status) {
+            const data = await adminRequest({ action: 'set_car_status', car_id: carId, status });
+            if (data.status === 'success') {
+                showToast(status === 'approved' ? 'Car approved' : 'Car rejected');
+                loadPendingCars();
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        // ── Inquiries ──────────────────────────────────────────────────────────
+        async function loadInquiries() {
+            const data = await adminRequest({ action: 'get_inquiries' });
+            const tbody = document.getElementById('inquiriesTableBody');
+            if (!data.inquiries || !data.inquiries.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="admin-empty">No inquiries.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.inquiries.map(i => `
+                <tr>
+                    <td>#${i.contact_id}</td>
+                    <td>${esc(i.user_name)}</td>
+                    <td>${i.car_name ? esc(i.car_name) : '<span style="color:#555">—</span>'}</td>
+                    <td class="admin-msg">${i.message ? esc(i.message) : '<span style="color:#555">—</span>'}</td>
+                    <td><span class="status-badge ${i.status}">${i.status}</span></td>
+                    <td>${i.submitted_at ? new Date(i.submitted_at).toLocaleDateString() : '—'}</td>
+                    <td>
+                        <button class="action-btn btn-password" onclick="openReplyModal(${i.contact_id}, \`${esc(i.admin_reply || '')}\`)">💬 Reply</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openReplyModal(contactId, existingReply) {
+            currentInquiryId = contactId;
+            document.getElementById('replyInput').value = existingReply || '';
+            openModal('replyModal');
+        }
+
+        async function confirmReply() {
+            const reply = document.getElementById('replyInput').value.trim();
+            if (!reply) { showToast('Reply cannot be empty', 'error'); return; }
+            const data = await adminRequest({ action: 'reply_inquiry', contact_id: currentInquiryId, reply });
+            closeModal('replyModal');
+            if (data.status === 'success') {
+                showToast('Reply sent');
+                loadInquiries();
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        function esc(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
 
         document.addEventListener('DOMContentLoaded', () => {

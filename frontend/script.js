@@ -173,6 +173,13 @@ function initHomePage() {
 }
 
 function loadCars() {
+    document.getElementById('carsGrid').innerHTML = `
+        <div class="cars-loading">
+            <div class="loading-spinner"></div>
+            <p>Loading collection...</p>
+        </div>
+    `;
+    
     fetch('/backend/cars.php')
     .then(res => res.json())
     .then(data => {

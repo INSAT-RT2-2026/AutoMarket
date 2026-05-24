@@ -38,11 +38,15 @@ if ($action === "get_users") {
 
 // ── set_password ──────────────────────────────────────────────────────────────
 if ($action === "set_password") {
-    $user_id     = intval($data->user_id     ?? 0);
-    $new_password = $data->new_password ?? '';
+    $user_id = intval($data->user_id ?? 0);
+    $new_password = trim($data->new_password ?? '');
 
-    if (!$user_id || strlen($new_password) < 6) {
-        echo json_encode(["status" => "error", "message" => "Password must be at least 6 characters"]);
+    if ($user_id <= 0) {
+        echo json_encode(["status" => "error", "message" => "Invalid user"]);
+        exit;
+    }
+    if (strlen($new_password) < 6) {
+        echo json_encode(["status" => "error", "message" => "Password too short"]);
         exit;
     }
 
@@ -79,6 +83,7 @@ if ($action === "delete_user") {
         echo json_encode(["status" => "error", "message" => "Invalid user ID"]);
         exit;
     }
+
 
     // Prevent deleting other admins for safety
     $stmt = $pdo->prepare("DELETE FROM users WHERE user_id = ? AND role != 'admin'");

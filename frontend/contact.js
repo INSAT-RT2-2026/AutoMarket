@@ -50,6 +50,10 @@ function updateNavbar() {
                 const isVisible = dropdown.style.display === 'block';
                 dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
             };
+            const adminLinkEl = document.getElementById('navAdminLink');
+            if (adminLinkEl) {
+                adminLinkEl.style.display = parsed.role === 'admin' ? 'block' : 'none';
+            }
         }
     } else {
         if (navAuthBtn) navAuthBtn.style.display = 'block';

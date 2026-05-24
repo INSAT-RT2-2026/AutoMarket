@@ -24,6 +24,7 @@
                     <a href="#" onclick="logout()">➜ Logout</a>
                 </div>
             </div>
+            <a href="admin.html" id="navAdminLink" style="display:none; color:#d4af37;">⚙️ Admin Panel</a>
         </div>
     </nav>
 
@@ -31,7 +32,7 @@
         <h2>My Activity</h2>
         <p class="history-subtitle">Track your inquiries, cars and our responses.</p>
         <div class="history-list" id="historyList">
-            <p class="loading-text">Loading your activety...</p>
+            <p class="loading-text">Loading your activity...</p>
         </div>
     </div>
 
@@ -53,6 +54,10 @@
                     const dropdown = document.getElementById('navDropdown');
                     dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
                 };
+                const adminLinkEl = document.getElementById('navAdminLink');
+                if (adminLinkEl) {
+                    adminLinkEl.style.display = parsed.role === 'admin' ? 'block' : 'none';
+                }
             } else {
                 navAuthBtn.style.display = 'block';
                 navUserMenu.style.display = 'none';

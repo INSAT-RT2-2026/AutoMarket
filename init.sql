@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS contacts (
 
 CREATE TABLE IF NOT EXISTS cars (
     car_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
     brand VARCHAR(100) NOT NULL,
     model VARCHAR(100) NOT NULL,
     year INT NOT NULL,
@@ -33,5 +34,6 @@ CREATE TABLE IF NOT EXISTS cars (
     seller_email VARCHAR(150) NOT NULL,
     images TEXT,
     status VARCHAR(20) DEFAULT 'pending',
-    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 );

@@ -1,17 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    if (!user) {
+        sessionStorage.setItem('redirectAfterLogin', 'sell.html');
+        window.location.href = 'login.html';
+        return;
+    }
     updateNavbar();
     prefillUser();
 
     document.getElementById('sellForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const btn = this.querySelector('.submit-btn');
-        const msg = document.getElementById('responseMsg');
 
+        const fields = ['brand', 'model', 'year', 'price', 'horsepower', 'description', 'name', 'phone', 'email'];
+        for (const f of fields) {
+            const el = this.querySelector(`[name="${f}"]`);
+            if (!el || !el.value.trim()) {
+                showError(`Please fill in: ${f}`);
+                return;
+            }
+        }
+        if (!this.querySelector('[name="images[]"]').files.length) {
+            showError('Please upload at least one image');
+            return;
+        }
+
+        const btn = this.querySelector('.submit-btn');
         btn.disabled = true;
         btn.textContent = 'Submitting...';
+        clearError();
 
         try {
             const formData = new FormData(this);
+            formData.append('user_id', user.id);
             const res = await fetch('/backend/sell.php', {
                 method: 'POST',
                 body: formData
@@ -29,18 +49,27 @@ document.addEventListener('DOMContentLoaded', () => {
                         <a href="index.html" style="display:inline-block;margin-top:1.5rem;color:#00f0ff;text-decoration:none;font-weight:bold;">← Back to collection</a>
                     </div>`;
             } else {
-                msg.textContent = 'Something went wrong. Please try again.';
+                showError('Something went wrong. Please try again.');
                 btn.disabled = false;
                 btn.textContent = 'Submit Car';
             }
         } catch (err) {
-            msg.textContent = 'Network error. Please try again.';
+            showError('Network error. Please try again.');
             btn.disabled = false;
             btn.textContent = 'Submit Car';
-            console.error(err);
         }
     });
 });
+
+function showError(msg) {
+    const el = document.getElementById('responseMsg');
+    el.style.color = '#ff5050';
+    el.textContent = msg;
+}
+
+function clearError() {
+    document.getElementById('responseMsg').textContent = '';
+}
 
 function prefillUser() {
     const user = JSON.parse(localStorage.getItem('user') || 'null');

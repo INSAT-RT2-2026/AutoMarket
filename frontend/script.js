@@ -134,6 +134,7 @@ const allCars = [
 ];
 
 let currentCars = [...allCars];
+let allLoadedCars = [...allCars];
 
 document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
@@ -169,10 +170,6 @@ function initHomePage() {
     if (sortSelect) {
         sortSelect.addEventListener("change", sortCars);
     }
-
-    if (document.getElementById('carsGrid')) {
-        loadCars();
-    }
 }
 
 function loadCars() {
@@ -192,11 +189,39 @@ function loadCars() {
             type: 'listing'
         }));
         currentCars = [...allCars, ...dbCars];
+        allLoadedCars = [...currentCars];
         displayCars(currentCars);
+        rebuildSearchDropdowns(currentCars);
     })
     .catch(() => {
         currentCars = [...allCars];
+        allLoadedCars = [...allCars];
         displayCars(currentCars);
+    });
+}
+function rebuildSearchDropdowns(cars) {
+    // rebuild makes
+    const makeList = document.getElementById('makeList');
+    if (!makeList) return;
+    
+    const makes = [...new Set(cars.map(c => c.brand))].sort();
+    makeList.innerHTML = '<li class="custom-option selected" data-value="" onclick="selectMake(this)">Any Make</li>';
+    makes.forEach(make => {
+        const li = document.createElement('li');
+        li.className = 'custom-option';
+        li.dataset.value = make.toLowerCase();
+        li.textContent = make;
+        li.onclick = function() { selectMake(this); };
+        makeList.appendChild(li);
+    });
+
+    // rebuild modelsMap
+    cars.forEach(car => {
+        const key = car.brand.toLowerCase();
+        if (!modelsMap[key]) modelsMap[key] = [];
+        if (!modelsMap[key].includes(car.model)) {
+            modelsMap[key].push(car.model);
+        }
     });
 }
 
@@ -265,13 +290,13 @@ function filterCars(category) {
     event.target.classList.add('active');
 
     if (category === 'all') {
-        currentCars = [...allCars];
+        currentCars = [...allLoadedCars];
     } else if (category === 'supercars') {
-        currentCars = allCars.filter(car => ['sports', 'supercar'].includes(car.type));
+        currentCars = allLoadedCars.filter(car => ['sports', 'supercar'].includes(car.type));
     } else if (category === 'luxury') {
-        currentCars = allCars.filter(car => ['sedan', 'suv', 'electric', 'truck'].includes(car.type));
+        currentCars = allLoadedCars.filter(car => ['sedan', 'suv', 'electric', 'truck', 'listing'].includes(car.type));
     } else if (category === 'exotic') {
-        currentCars = allCars.filter(car => ['supercar', 'electric'].includes(car.type));
+        currentCars = allLoadedCars.filter(car => ['supercar', 'electric'].includes(car.type));
     }
 
     displayCars(currentCars);
@@ -365,7 +390,7 @@ function updateModels(make) {
 function startSearch() {
     const make  = document.getElementById('make').value.toLowerCase();
     const model = document.getElementById('model').value.toLowerCase();
-    let filtered = allCars;
+    let filtered = allLoadedCars;
     if (make)  filtered = filtered.filter(c => c.brand.toLowerCase() === make);
     if (model) filtered = filtered.filter(c => c.model.toLowerCase() === model);
     displayCars(filtered);

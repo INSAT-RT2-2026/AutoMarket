@@ -435,13 +435,14 @@ body {
     margin: 0 auto;
 }
 
-.car-card {
-    background: #1a1a2e;
-    border-radius: 15px;
-    padding: 2rem;
-    text-align: center;
-    border: 1px solid #333;
-    opacity: 1;
+.featured-grid .car-card img {
+    padding: 1rem 1rem 0;
+    border-radius: 20px;
+}
+
+.featured-grid .car-card h3,
+.featured-grid .car-card p {
+    padding: 0 1rem;
 }
 
 .car-card.visible {
@@ -463,6 +464,10 @@ body {
     font-size: 1.5rem;
     font-weight: bold;
     animation: pulse 2s infinite;
+}
+
+.car-info {
+    padding: 1rem 1.5rem 1.5rem;
 }
 
 .stats {
@@ -526,9 +531,9 @@ body {
 .car-card {
     background: #1a1a1a;
     border-radius: 12px;
-    overflow: hidden;
     transition: 0.3s ease;
-    padding: 0;
+    padding: 1rem 1rem 0;
+    padding-bottom: 1.5rem;
 }
 
 .car-card img {
@@ -536,6 +541,8 @@ body {
     height: 200px;
     object-fit: contain;
     display: block;
+    padding: 1rem 1rem 0;
+    border-radius: 20px;
 }
 
 .car-card h3 {
@@ -547,6 +554,15 @@ body {
     margin-bottom: 20px;
     color: #00f0ff;
     font-weight: bold;
+}
+
+.car-card img {
+    border-radius: 12px;
+}
+
+.cars-grid .car-card h3,
+.cars-grid .car-card p {
+    padding: 0 1rem;
 }
 
 .car-card:hover {

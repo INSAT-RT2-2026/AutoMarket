@@ -11,14 +11,52 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sellForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const fields = ['brand', 'model', 'year', 'price', 'horsepower', 'description', 'name', 'phone', 'email'];
-        for (const f of fields) {
-            const el = this.querySelector(`[name="${f}"]`);
+        const validations = [
+            { name: 'brand',       label: 'Brand' },
+            { name: 'model',       label: 'Model' },
+            { name: 'year',        label: 'Year' },
+            { name: 'price',       label: 'Price' },
+            { name: 'horsepower',  label: 'Horsepower' },
+            { name: 'description', label: 'Description' },
+            { name: 'name',        label: 'Your Name' },
+            { name: 'phone',       label: 'Phone Number' },
+            { name: 'email',       label: 'Email' },
+        ];
+
+        for (const { name, label } of validations) {
+            const el = this.querySelector(`[name="${name}"]`);
             if (!el || !el.value.trim()) {
-                showError(`Please fill in: ${f}`);
+                showError(`${label} is required`);
+                el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el?.focus();
                 return;
             }
         }
+
+        const year = parseInt(this.querySelector('[name="year"]').value);
+        if (year < 1900 || year > new Date().getFullYear() + 1) {
+            showError('Please enter a valid year');
+            return;
+        }
+
+        const price = parseFloat(this.querySelector('[name="price"]').value);
+        if (price <= 0) {
+            showError('Please enter a valid price');
+            return;
+        }
+
+        const emailVal = this.querySelector('[name="email"]').value;
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+            showError('Please enter a valid email');
+            return;
+        }
+
+        const phone = this.querySelector('[name="phone"]').value;
+        if (!/^[0-9]{8}$/.test(phone)) {
+            showError('Phone must be 8 digits');
+            return;
+        }
+
         if (!this.querySelector('[name="images[]"]').files.length) {
             showError('Please upload at least one image');
             return;

@@ -285,9 +285,12 @@ function initCarDetailsPage() {
                     price: parseFloat(c.price),
                     horsepower: c.horsepower,
                     image: images[0] || 'car_images/default.jpg',
-                    specs: `${c.year} • ${c.horsepower}hp`,
+                    specs:`${c.horsepower}hp`,
                     description: c.description,
-                    type: 'listing'
+                    type: 'listing',
+                    seller_name: c.seller_name,
+                    seller_phone: c.seller_phone,
+                    seller_email: c.seller_email
                 }, detailsContainer);
             } else {
                 renderCarDetails(null, detailsContainer);
@@ -519,6 +522,14 @@ function renderCarDetails(car, container) {
                     <h4>About this car</h4>
                     <p>${car.description || ''}</p>
                 </div>
+                ${car.seller_name ? `
+                    <div class="details-seller-box">
+                        <h4>Seller Info</h4>
+                        <p>👤 ${car.seller_name}</p>
+                        <p>📞 ${car.seller_phone}</p>
+                        <p>✉️ ${car.seller_email}</p>
+                    </div>
+                ` : ''}
                 <div class="details-actions">
                     <button class="buy-btn" onclick="inquire('${car.brand} ${car.model}')">Buy Now</button>
                     <a class="back-link" href="index.html#collection">← Back to collection</a>

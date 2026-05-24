@@ -1474,3 +1474,25 @@ tbody tr:hover {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+.details-seller-box {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid #00f0ff;
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.8rem;
+}
+
+.details-seller-box h4 {
+    color: #00f0ff;
+    margin-bottom: 0.6rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.details-seller-box p {
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}

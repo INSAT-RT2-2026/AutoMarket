@@ -166,6 +166,9 @@ function initHomePage() {
     if (document.getElementById('car-interest')) {
         populateCarSelect(allCars);
     }
+    if (document.querySelector('.featured-grid')) {
+        loadFeaturedCars();
+    }
     const sortSelect = document.getElementById("sort");
     if (sortSelect) {
         sortSelect.addEventListener("change", sortCars);
@@ -179,7 +182,7 @@ function loadCars() {
             <p>Loading collection...</p>
         </div>
     `;
-    
+
     fetch('/backend/cars.php')
     .then(res => res.json())
     .then(data => {
@@ -206,6 +209,33 @@ function loadCars() {
         displayCars(currentCars);
     });
 }
+
+function loadFeaturedCars() {
+    fetch('/backend/cars.php')
+    .then(res => res.json())
+    .then(data => {
+        const dbCars = (data.cars || []).slice(0, 3);
+        if (!dbCars.length) return;
+        
+        const grid = document.querySelector('.featured-grid');
+        if (!grid) return;
+
+        grid.innerHTML = dbCars.map(c => {
+            const images = c.images ? JSON.parse(c.images) : [];
+            const img = images[0] || 'car_images/default.jpg';
+            return `
+                <div class="car-card" onclick="openCarDetails('db-${c.car_id}')">
+                    <img src="${img}" alt="${c.brand} ${c.model}">
+                    <h3>${c.brand} ${c.model}</h3>
+                    <p>${parseInt(c.price).toLocaleString()} DT</p>
+                    <button class="details-btn" onclick="event.stopPropagation(); openCarDetails('db-${c.car_id}')">View Description</button>
+                </div>
+            `;
+        }).join('');
+    })
+    .catch(() => {}); 
+}
+
 function rebuildSearchDropdowns(cars) {
     // rebuild makes
     const makeList = document.getElementById('makeList');

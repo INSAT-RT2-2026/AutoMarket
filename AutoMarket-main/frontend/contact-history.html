@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TunLuxAuto - My Activity</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">TunLuxAuto</a>
+        <div class="nav-links">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#collection">Collection</a>
+            <a href="sell.html">Sell Your Car</a> 
+            <a href="contact.html">Contact</a>
+            <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+            <div id="navUserMenu">
+                <span id="navUserName" class="nav-login-btn">Me</span>
+                <div id="navDropdown">
+                    <div id="navDropdownHello">Hello, User!</div>
+                    <a href="#" onclick="logout()">➜ Logout</a>
+                </div>
+            </div>
+            <a href="admin.html" id="navAdminLink" style="display:none; color:#d4af37;">⚙️ Admin Panel</a>
+        </div>
+    </nav>
+
+    <div class="history-page">
+        <h2>My Activity</h2>
+        <p class="history-subtitle">Track your inquiries, cars and our responses.</p>
+        <div class="history-list" id="historyList">
+            <p class="loading-text">Loading your activity...</p>
+        </div>
+    </div>
+
+    <script>
+        function updateNavbar() {
+            const user = localStorage.getItem('user');
+            const navAuthBtn = document.getElementById('navAuthBtn');
+            const navUserMenu = document.getElementById('navUserMenu');
+            const navUserName = document.getElementById('navUserName');
+            if (!navAuthBtn) return;
+            if (user) {
+                const parsed = JSON.parse(user);
+                navAuthBtn.style.display = 'none';
+                navUserMenu.style.display = 'block';
+                navUserName.textContent = parsed.name.charAt(0).toUpperCase();
+                const helloEl = document.getElementById('navDropdownHello');
+                if (helloEl) helloEl.textContent = 'Hello ' + parsed.name + '!';
+                navUserName.onclick = function() {
+                    const dropdown = document.getElementById('navDropdown');
+                    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                };
+                const adminLinkEl = document.getElementById('navAdminLink');
+                if (adminLinkEl) {
+                    adminLinkEl.style.display = parsed.role === 'admin' ? 'block' : 'none';
+                }
+            } else {
+                navAuthBtn.style.display = 'block';
+                navUserMenu.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        function formatDate(timestamp) {
+            const d = new Date(timestamp);
+            return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function renderHistory(contacts, listings) {
+            const list = document.getElementById('historyList');
+            list.innerHTML = `
+                <div class="tab-bar">
+                    <button class="tab-btn active" onclick="switchTab('inquiries', this)">📋 My Inquiries (${contacts.length})</button>
+                    <button class="tab-btn" onclick="switchTab('listings', this)">🚗 My Listings (${listings.length})</button>
+                </div>
+                <div id="tab-inquiries">${renderInquiries(contacts)}</div>
+                <div id="tab-listings" style="display:none">${renderListings(listings)}</div>
+            `;
+        }
+
+        function renderListings(listings) {
+            if (!listings.length) return `
+                <div class="empty-state">
+                    <div class="empty-icon">🚗</div>
+                    <p>You haven't submitted any listings yet.</p>
+                    <a href="sell.html">List a Car</a>
+                </div>`;
+
+            return listings.map((l, i) => `
+                <div class="inquiry-card ${l.status}" style="animation-delay:${i*0.1}s">
+                    <div class="inquiry-header">
+                        <span class="inquiry-car">${l.brand} ${l.model} ${l.year}</span>
+                        <span class="inquiry-date">${formatDate(l.submitted_at)}</span>
+                    </div>
+                    <p class="listing-price">${parseInt(l.price).toLocaleString()} DT</p>
+                    <span class="status-badge ${l.status}">${l.status}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderInquiries(contacts) {
+            if (!contacts.length) return `
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <p>You haven't made any inquiries yet.</p>
+                    <a href="index.html#collection">Browse Collection</a>
+                </div>`;
+
+            return contacts.map((c, i) => `
+                <div class="inquiry-card ${c.status}" style="animation-delay:${i*0.1}s">
+                    <div class="inquiry-header">
+                        <span class="inquiry-car ${!c.car_name ? 'no-car' : ''}">
+                            ${c.car_name ? '🚗 ' + c.car_name : 'General inquiry'}
+                        </span>
+                        <span class="inquiry-date">${formatDate(c.submitted_at)}</span>
+                    </div>
+                    <p class="inquiry-message ${!c.message ? 'no-message' : ''}">
+                        ${c.message || 'No message provided'}
+                    </p>
+                    <span class="status-badge ${c.status}">${c.status}</span>
+                    ${c.admin_reply ? `
+                        <div class="admin-reply">
+                            <div class="admin-reply-label">Team Response</div>
+                            <p>${c.admin_reply}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const raw = localStorage.getItem('user');
+            if (!raw) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const user = JSON.parse(raw);
+            updateNavbar();
+
+            fetch('/backend/history.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: user.id, email: user.email })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    renderHistory(data.contacts, data.listings);
+                } else {
+                    document.getElementById('historyList').innerHTML =
+                        '<p class="loading-text">Could not load inquiries.</p>';
+                }
+            })
+            .catch(() => {
+                document.getElementById('historyList').innerHTML =
+                    '<p class="loading-text">Something went wrong.</p>';
+            });
+
+            document.addEventListener('click', function(e) {
+                const menu = document.getElementById('navUserMenu');
+                const dropdown = document.getElementById('navDropdown');
+                if (menu && dropdown && !menu.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+
+                document.addEventListener('click', (event) => {
+                    const navUserMenu = document.getElementById('navUserMenu');
+                    const navDropdown = document.getElementById('navDropdown');
+                    if (!navUserMenu || !navDropdown) return;
+                    if (!navUserMenu.contains(event.target)) {
+                        navDropdown.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        function switchTab(tab, btn) {
+            document.getElementById('tab-inquiries').style.display = tab === 'inquiries' ? 'block' : 'none';
+            document.getElementById('tab-listings').style.display  = tab === 'listings'  ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+    </script>
+</body>
+</html>

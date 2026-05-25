@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ car.brand }} {{ car.model }} - TunLuxAuto{% endblock %}
+
+{% block body %}
+<a href="{{ path('car_list') }}" style="color:#d4af37;">&larr; Back to collection</a>
+<h1 style="color:#d4af37;">{{ car.brand }} {{ car.model }}</h1>
+<p>Year: {{ car.year }}</p>
+<p style="font-size:1.4rem; color:#d4af37;">{{ car.price }} TND</p>
+{% if car.description %}
+    <p>{{ car.description }}</p>
+{% endif %}
+<br>
+<a href="{{ path('contact') }}" style="color:#d4af37;">Contact us about this car &rarr;</a>
+{% endblock %}

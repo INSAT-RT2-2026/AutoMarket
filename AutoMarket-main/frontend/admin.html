@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TunLuxAuto - Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">TunLuxAuto</a>
+        <div class="nav-links">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#collection">Collection</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+            <div id="navUserMenu">
+                <span id="navUserName" class="nav-login-btn">Me</span>
+                <div id="navDropdown">
+                    <div id="navDropdownHello">Hello, User!</div>
+                    <a href="admin.html" id="navAdminLink" style="display:none; color:#d4af37;">⚙️ Admin Panel</a>
+                    <a href="#" onclick="logout()">➜ Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-page">
+        <div class="admin-header">
+            <h1>⚙️ Admin Panel</h1>
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchAdminTab('users', this)">👥 Users</button>
+                <button class="admin-tab" onclick="switchAdminTab('cars', this)">🚗 Pending Cars</button>
+                <button class="admin-tab" onclick="switchAdminTab('inquiries', this)">📋 Inquiries</button>
+            </div>
+        </div>
+
+        <div class="stats-bar" id="statsBar"></div>
+
+        <!-- Users Tab -->
+        <div id="tab-users">
+            <div class="admin-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="7" class="admin-empty">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pending Cars Tab -->
+        <div id="tab-cars" style="display:none">
+            <div id="carsTableBody"></div>
+        </div>
+
+        <!-- Inquiries Tab -->
+        <div id="tab-inquiries" style="display:none">
+            <div class="admin-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Car</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inquiriesTableBody">
+                        <tr><td colspan="7" class="admin-empty">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Modal -->
+    <div class="modal-overlay" id="roleModal">
+        <div class="modal">
+            <h3>Change Role</h3>
+            <select id="roleSelect">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('roleModal')">Cancel</button>
+                <button class="btn-confirm" onclick="confirmSetRole()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <h3>Set New Password</h3>
+            <input type="password" id="newPasswordInput" placeholder="New password (min 6 chars)">
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('passwordModal')">Cancel</button>
+                <button class="btn-confirm" onclick="confirmSetPassword()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply Modal -->
+    <div class="modal-overlay" id="replyModal">
+        <div class="modal">
+            <h3>Reply to Inquiry</h3>
+            <textarea id="replyInput" placeholder="Your reply..." rows="4"></textarea>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('replyModal')">Cancel</button>
+                <button class="btn-confirm" onclick="confirmReply()">Send Reply</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentUserId = null;
+        let currentInquiryId = null;
+        let adminEmail = null;
+
+        function getAdmin() {
+            const raw = localStorage.getItem('user');
+            if (!raw) return null;
+            try { return JSON.parse(raw); } catch { return null; }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast ${type} show`;
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+            currentUserId = null;
+            currentInquiryId = null;
+        }
+
+        function updateNavbar(user) {
+            document.getElementById('navAuthBtn').style.display = 'none';
+            const menu = document.getElementById('navUserMenu');
+            menu.style.display = 'block';
+            const nameEl = document.getElementById('navUserName');
+            nameEl.textContent = user.name.charAt(0).toUpperCase();
+            document.getElementById('navDropdownHello').textContent = 'Hello ' + user.name + '!';
+            document.getElementById('navAdminLink').style.display = 'block';
+            nameEl.onclick = () => {
+                const d = document.getElementById('navDropdown');
+                d.style.display = d.style.display === 'block' ? 'none' : 'block';
+            };
+        }
+
+        async function adminRequest(body) {
+            const res = await fetch('/backend/admin.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_email: adminEmail, ...body })
+            });
+            return res.json();
+        }
+
+        function switchAdminTab(tab, btn) {
+            document.getElementById('statsBar').style.display = tab === 'users' ? 'flex' : 'none';
+            document.getElementById('tab-users').style.display = tab === 'users' ? 'block' : 'none';
+            document.getElementById('tab-cars').style.display = tab === 'cars' ? 'block' : 'none';
+            document.getElementById('tab-inquiries').style.display = tab === 'inquiries' ? 'block' : 'none';
+            document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (tab === 'cars') loadPendingCars();
+            if (tab === 'inquiries') loadInquiries();
+        }
+
+        // ── Users ──────────────────────────────────────────────────────────────
+        async function loadUsers() {
+            const data = await adminRequest({ action: 'get_users' });
+            if (data.status !== 'success') {
+                showToast(data.message || 'Failed to load users', 'error');
+                return;
+            }
+            renderStats(data.users);
+            renderTable(data.users);
+        }
+
+        function renderStats(users) {
+            const total = users.length;
+            const admins = users.filter(u => u.role === 'admin').length;
+            document.getElementById('statsBar').innerHTML = `
+                <div class="stat-card"><div class="label">Total Users</div><div class="value">${total}</div></div>
+                <div class="stat-card"><div class="label">Admins</div><div class="value">${admins}</div></div>
+                <div class="stat-card"><div class="label">Regular Users</div><div class="value">${total - admins}</div></div>
+            `;
+        }
+
+        function renderTable(users) {
+            const tbody = document.getElementById('usersTableBody');
+            if (!users.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="admin-empty">No users found.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td>#${u.user_id}</td>
+                    <td>${esc(u.name)}</td>
+                    <td>${esc(u.email)}</td>
+                    <td>${esc(u.phone)}</td>
+                    <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+                    <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</td>
+                    <td>
+                        <button class="action-btn btn-role" onclick="openRoleModal(${u.user_id}, '${u.role}')">Role</button>
+                        <button class="action-btn btn-password" onclick="openPasswordModal(${u.user_id})">Password</button>
+                        ${u.role !== 'admin' ? `<button class="action-btn btn-delete" onclick="deleteUser(${u.user_id})">Delete</button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openRoleModal(userId, currentRole) {
+            currentUserId = userId;
+            document.getElementById('roleSelect').value = currentRole;
+            openModal('roleModal');
+        }
+
+        async function confirmSetRole() {
+            const newRole = document.getElementById('roleSelect').value;
+            const data = await adminRequest({ action: 'set_role', user_id: currentUserId, new_role: newRole });
+            closeModal('roleModal');
+            if (data.status === 'success') {
+                showToast('Role updated');
+                loadUsers();
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        function openPasswordModal(userId) {
+            currentUserId = userId;
+            document.getElementById('newPasswordInput').value = '';
+            openModal('passwordModal');
+        }
+
+        async function confirmSetPassword() {
+            const pw = document.getElementById('newPasswordInput').value;
+            if (pw.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+            const data = await adminRequest({ action: 'set_password', user_id: currentUserId, new_password: pw });
+            closeModal('passwordModal');
+            if (data.status === 'success') {
+                showToast('Password updated');
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Delete this user? This cannot be undone.')) return;
+            const data = await adminRequest({ action: 'delete_user', user_id: userId });
+            if (data.status === 'success') {
+                showToast('User deleted');
+                loadUsers();
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        // ── Pending Cars ───────────────────────────────────────────────────────
+        async function loadPendingCars() {
+            const data = await adminRequest({ action: 'get_pending_cars' });
+            const tbody = document.getElementById('carsTableBody');
+            if (!data.cars || !data.cars.length) {
+                tbody.innerHTML = '<div class="admin-empty">No pending cars.</div>';
+                return;
+            }
+            tbody.innerHTML = data.cars.map(c => {
+                const images = c.images ? JSON.parse(c.images) : [];
+                const thumb = images[0] ? `<img src="${images[0]}" class="pending-car-img">` : '<div class="pending-car-img no-img">No Image</div>';
+                return `
+                    <div class="pending-car-card">
+                        ${thumb}
+                        <div class="pending-car-info">
+                            <div class="pending-car-title">${esc(c.brand)} ${esc(c.model)} <span>${c.year}</span></div>
+                            <div class="pending-car-price">${parseInt(c.price).toLocaleString()} DT</div>
+                            <div class="pending-car-desc">${esc(c.description || 'No description provided.')}</div>
+                            <div class="pending-car-seller">👤 ${esc(c.seller_name)} · ${esc(c.seller_email)} · ${esc(c.seller_phone)}</div>
+                            <div class="pending-car-actions">
+                                <button class="action-btn btn-role" onclick="setCarStatus(${c.car_id}, 'approved')">✅ Approve</button>
+                                <button class="action-btn btn-delete" onclick="setCarStatus(${c.car_id}, 'rejected')">❌ Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function setCarStatus(carId, status) {
+            const data = await adminRequest({ action: 'set_car_status', car_id: carId, status });
+            if (data.status === 'success') {
+                showToast(status === 'approved' ? 'Car approved' : 'Car rejected');
+                loadPendingCars();
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        // ── Inquiries ──────────────────────────────────────────────────────────
+        async function loadInquiries() {
+            const data = await adminRequest({ action: 'get_inquiries' });
+            const tbody = document.getElementById('inquiriesTableBody');
+            if (!data.inquiries || !data.inquiries.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="admin-empty">No inquiries.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.inquiries.map(i => `
+                <tr>
+                    <td>#${i.contact_id}</td>
+                    <td>${esc(i.user_name)}</td>
+                    <td>${i.car_name ? esc(i.car_name) : '<span style="color:#555">—</span>'}</td>
+                    <td class="admin-msg">${i.message ? esc(i.message) : '<span style="color:#555">—</span>'}</td>
+                    <td><span class="status-badge ${i.status}">${i.status}</span></td>
+                    <td>${i.submitted_at ? new Date(i.submitted_at).toLocaleDateString() : '—'}</td>
+                    <td>
+                        <button class="action-btn btn-password" onclick="openReplyModal(${i.contact_id}, \`${esc(i.admin_reply || '')}\`)">💬 Reply</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openReplyModal(contactId, existingReply) {
+            currentInquiryId = contactId;
+            document.getElementById('replyInput').value = existingReply || '';
+            openModal('replyModal');
+        }
+
+        async function confirmReply() {
+            const reply = document.getElementById('replyInput').value.trim();
+            if (!reply) { showToast('Reply cannot be empty', 'error'); return; }
+            const data = await adminRequest({ action: 'reply_inquiry', contact_id: currentInquiryId, reply });
+            closeModal('replyModal');
+            if (data.status === 'success') {
+                showToast('Reply sent');
+                loadInquiries();
+            } else {
+                showToast(data.message || 'Failed', 'error');
+            }
+        }
+
+        function esc(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = getAdmin();
+            if (!user || user.role !== 'admin') {
+                window.location.href = 'index.html';
+                return;
+            }
+            adminEmail = user.email;
+            updateNavbar(user);
+            loadUsers();
+            document.addEventListener('click', (event) => {
+                const navUserMenu = document.getElementById('navUserMenu');
+                const navDropdown = document.getElementById('navDropdown');
+                if (!navUserMenu || !navDropdown) return;
+                if (!navUserMenu.contains(event.target)) {
+                    navDropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

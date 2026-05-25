@@ -6,9 +6,6 @@ services:
     build: .
     ports:
       - "8080:80"
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
     volumes:
       - ./frontend:/var/www/html/frontend
       - ./backend:/var/www/html/backend
@@ -18,12 +15,6 @@ services:
       DB_USER: tunluxuser
       DB_PASSWORD: tunluxpass
       DB_PORT: 3306
-      MAIL_HOST: smtp.resend.com
-      MAIL_PORT: 587
-      MAIL_USER: resend
-      MAIL_PASS: re_6dsMXuFR_8ACnU4w6f8ysjG4ZVmhpaBuB
-      MAIL_FROM: onboarding@resend.dev
-      APP_ORIGIN: http://localhost:8080
     depends_on:
       db:
         condition: service_healthy
@@ -36,7 +27,6 @@ services:
       MYSQL_USER: tunluxuser
       MYSQL_PASSWORD: tunluxpass
       MYSQL_ROOT_PASSWORD: rootpass
-      APP_ORIGIN: https://automarket-production-ac0c.up.railway.app
     ports:
       - "3307:3306"
     volumes:

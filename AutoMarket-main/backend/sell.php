@@ -2,14 +2,6 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-$origin  = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '';
-$allowed = getenv('APP_ORIGIN'); // your Render URL
-
-if ($allowed && !str_contains($origin, $allowed)) {
-    echo json_encode(["status" => "error", "message" => "Forbidden"]);
-    exit;
-}
-
 require_once "db.php";
 
 $user_id     = isset($_POST['user_id']) ? intval($_POST['user_id']) : null;

@@ -10,14 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$origin  = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '';
-$allowed = getenv('APP_ORIGIN'); // your Render URL
-
-if ($allowed && !str_contains($origin, $allowed)) {
-    echo json_encode(["status" => "error", "message" => "Forbidden"]);
-    exit;
-}
-
 require_once "db.php";
 
 $data = json_decode(file_get_contents("php://input"));

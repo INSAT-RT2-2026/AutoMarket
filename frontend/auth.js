@@ -31,7 +31,7 @@ function login() {
             sessionStorage.removeItem('redirectAfterLogin');
             window.location.href = redirect || 'index.html';
         } else {
-            alert("Invalid email or password");
+            alert(data.message);
         }
     })
     .catch(error => {

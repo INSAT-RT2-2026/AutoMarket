@@ -41,20 +41,22 @@ if ($action === "register") {
 }
 
 if ($action === "login") {
-        $email = $data->email;
-        $password = $data->password;
+    $email = $data->email;
+    $password = $data->password;
 
 
     $ip = $_SERVER['REMOTE_ADDR'];
 
-    $pdo->prepare("DELETE FROM login_attempts WHERE attempted_at < NOW() - INTERVAL 15 MINUTE")->execute();
-
+    // Count first
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM login_attempts WHERE ip = ?");
     $stmt->execute([$ip]);
     if ($stmt->fetchColumn() >= 5) {
         echo json_encode(["status" => "error", "message" => "Too many failed attempts. Try again in 15 minutes."]);
         exit;
     }
+
+    // Then clean up old ones
+    $pdo->prepare("DELETE FROM login_attempts WHERE attempted_at < NOW() - INTERVAL 15 MINUTE")->execute();
 
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([$email]);

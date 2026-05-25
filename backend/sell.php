@@ -3,7 +3,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
 $origin  = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '';
-$allowed = getenv('APP_ORIGIN'); // your Render URL
+$allowed = getenv('https://automarket-production-ac0c.up.railway.app');
 
 if ($allowed && !str_contains($origin, $allowed)) {
     echo json_encode(["status" => "error", "message" => "Forbidden"]);
@@ -27,13 +27,19 @@ $uploadedPaths = [];
 $uploadDir = __DIR__ . '/../frontend/car_images/listings/';
 if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
+$allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
+
 if (!empty($_FILES['images']['name'][0])) {
     foreach ($_FILES['images']['tmp_name'] as $i => $tmp) {
         if ($_FILES['images']['error'][$i] === 0) {
+            if (!in_array(mime_content_type($tmp), $allowed_types)) {
+                echo json_encode(["status" => "error", "message" => "Invalid file type"]);
+                exit;
+            }
             $ext = pathinfo($_FILES['images']['name'][$i], PATHINFO_EXTENSION);
             $filename = uniqid('listing_') . '.' . $ext;
             move_uploaded_file($tmp, $uploadDir . $filename);
-            $uploadedPaths[] = 'car_images/listings/' . $filename;
+            $uploadedPaths[] = 'car_images/' . $filename;
         }
     }
 }

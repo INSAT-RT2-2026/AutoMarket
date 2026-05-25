@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Car</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <nav class="navbar">
+    <a href="index.html" class="logo">TunLuxAuto</a>
+
+    <div class="nav-links">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#collection">Collection</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html" class="nav-login-btn" id="navAuthBtn">Login</a>
+        <div id="navUserMenu">
+    <span id="navUserName" class="nav-login-btn">Me</span>
+    <div id="navDropdown">
+        <div id="navDropdownHello">Hello, User!</div>
+        <a href="admin.html" id="navAdminLink" style="display:none; color:#d4af37;">⚙️ Admin Panel</a>
+        <a href="contact-history.html" id="navHistoryLink">📋 My Activity </a>
+        <a href="#" onclick="logout()">➜] Logout</a>
+    </div>
+</div>
+    </div>
+    </nav>
+
+    <section class="sell-page">
+
+        <div class="sell-container">
+            <h2>Sell Your Car</h2>
+            <p class="subtitle">List your vehicle and reach premium buyers</p>
+
+            <form id="sellForm">
+
+                <div class="form-grid">
+                    <input type="text" name="brand" placeholder="Brand" required>
+                    <input type="text" name="model" placeholder="Model" required>
+                    <input type="number" name="year" placeholder="Year" required>
+                    <input type="number" name="price" placeholder="Price (DT)" required>
+                    <input type="number" name="horsepower" placeholder="Horsepower" required>
+                </div>
+
+                <textarea name="description" placeholder="Describe your car..." required></textarea>
+
+                <div class="form-grid">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="text" name="phone" placeholder="Phone Number" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+
+                <div class="file-upload">
+                    <label>Upload Car Images</label>
+                    <input type="file" name="images[]" multiple accept="image/*" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Car</button>
+
+                
+            </form>
+            <p id="responseMsg"></p>
+        </div>
+
+    </section>
+
+    <script src="sell.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact - TunLuxAuto{% endblock %}
+
+{% block body %}
+<h1 style="color:#d4af37;">Contact Us</h1>
+
+{% for message in app.flashes('success') %}
+    <p style="color:green;">{{ message }}</p>
+{% endfor %}
+
+<form method="POST" style="max-width:500px; display:flex; flex-direction:column; gap:12px;">
+    <input type="text" name="name" placeholder="Your Name" required style="padding:10px; background:#1a1a1a; color:#eee; border:1px solid #d4af37;">
+    <input type="text" name="phone" placeholder="Phone" required style="padding:10px; background:#1a1a1a; color:#eee; border:1px solid #d4af37;">
+    <input type="email" name="email" placeholder="Email" required style="padding:10px; background:#1a1a1a; color:#eee; border:1px solid #d4af37;">
+    <input type="text" name="car" placeholder="Car you are interested in" style="padding:10px; background:#1a1a1a; color:#eee; border:1px solid #d4af37;">
+    <textarea name="message" placeholder="Your message" rows="5" style="padding:10px; background:#1a1a1a; color:#eee; border:1px solid #d4af37;"></textarea>
+    <button type="submit" style="padding:12px; background:#d4af37; color:#111; font-weight:bold; border:none; cursor:pointer;">Send</button>
+</form>
+{% endblock %}

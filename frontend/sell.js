@@ -97,6 +97,14 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.textContent = 'Submit Car';
         }
     });
+    document.addEventListener('click', (e) => {
+        const menu = document.getElementById('navUserMenu');
+        const dropdown = document.getElementById('navDropdown');
+        if (!menu || !dropdown) return;
+        if (!menu.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
 });
 
 function showError(msg) {

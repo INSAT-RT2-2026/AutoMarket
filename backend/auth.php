@@ -25,6 +25,8 @@ if ($action === "register") {
         $stmt = $pdo->prepare("INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)");
         $stmt->execute([$name, $email, $phone, $password]);
         $newId = $pdo->lastInsertId();
+        require_once "mailer.php";
+        sendWelcomeEmail($email, $name);
         echo json_encode([
             "status" => "success",
             "user_id" => $newId,

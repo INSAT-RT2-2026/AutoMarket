@@ -36,7 +36,6 @@ services:
       MYSQL_USER: tunluxuser
       MYSQL_PASSWORD: tunluxpass
       MYSQL_ROOT_PASSWORD: rootpass
-      APP_ORIGIN: https://automarket-production-ac0c.up.railway.app
     ports:
       - "3307:3306"
     volumes:
